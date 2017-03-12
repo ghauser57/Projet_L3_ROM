@@ -1,82 +1,99 @@
-#pragma once
-//#include "LectureGPR.cpp"
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <stdlib.h> 
-#include "Vecteur2D.h"
-#include "Graphe.h"
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 
-using namespace std;
+#pragma once
+#include "Erreur.h"
+#include <fstream>
+#include <stdlib.h> 
+#include <vector>
+//#include "LectureGPR.cpp"
+
+//trim d'un char *
+char *trimChar(char *str)
+{
+	char *end;
+
+	// Trim leading space
+	while (isspace((unsigned char)*str)) str++;
+
+	if (*str == 0)  // All spaces?
+		return str;
+
+	// Trim trailing space
+	end = str + strlen(str) - 1;
+	while (end > str && isspace((unsigned char)*end)) end--;
+
+	// Write new null terminator
+	*(end + 1) = 0;
+
+	return str;
+}
+
 
 int main()
 {
-	Vecteur2D v1(1, 2);
-	Vecteur2D v2(3, 1);
-	Vecteur2D v3(5, 2);
-	Vecteur2D v4(5, 3);
-	Vecteur2D v5(3, 4);
-	Vecteur2D v6(1, 3);
-
-
-	Graphe<double, Vecteur2D> g2;
-	Sommet<Vecteur2D> *som1 = g2.creeSommet("s1", v1);
-	Sommet<Vecteur2D> *som2 = g2.creeSommet("s2", v2);
-	Sommet<Vecteur2D> *som3 = g2.creeSommet("s3", v3);
-	Sommet<Vecteur2D> *som4 = g2.creeSommet("s4", v4);
-	Sommet<Vecteur2D> *som5 = g2.creeSommet("s5", v5);
-	Sommet<Vecteur2D> *som6 = g2.creeSommet("s6", v6);
-
-	Arete<double, Vecteur2D> * arr1 = g2.creeArete(som1, som3, som1->v.distance(som3->v));
-	g2.creeArete(som3, som5, som3->v.distance(som5->v));
-	g2.creeArete(som5, som6, som5->v.distance(som6->v));
-	g2.creeArete(som6, som4, som6->v.distance(som4->v));
-	g2.creeArete(som4, som2, som4->v.distance(som2->v));
-	g2.creeArete(som2, som1, som2->v.distance(som1->v));
-
-
-	cout << "g2 = " << g2 << endl;
-
-	Graphe<double, Vecteur2D> g = g2;
-
-	cout << "g = " << g << endl;
-	/*
-	ifstream fichier("gpr_files/data_VRPTW_10_3_2_4.gpr");
+	ifstream fichier("gpr_files/data_VRPTW_10.gpr");
 
 	if (fichier)
 	{
-		string ligne; //Une variable pour stocker les lignes lues
-		int n;
-		int position;
-		//int m;
+		string line;
+		string str;
+		int nbRessources;
+		char msg[500];
 
-		while (getline(fichier, ligne)) //Tant qu'on n'est pas à la fin, on lit
-		{
-		cout << ligne << endl;
+		getline(fichier, line);
 
-		//fichier.seekg(0, ios::end);
-		//fichier >> n;
-		//fichier.seekg(8, ios::cur);
-		//fichier >> m;
-		//position = fichier.tellg();
-		//cout << n << endl;
+		int N = 0, M = 0;
 
-		//cout << position << endl;
+		sscanf(line.c_str(), "# Graphe N = %d ; M = %d", &N, &M);
 
+		if (N != 0 && M != 0){
+			// Valeur récupérée avec succès !
 
-		//getline(fichier, ligne);
-		//getline(fichier, ligne);
-		//cout << ligne << endl;
-		//position = fichier.tellg();
-		//cout << position << endl;
+			cout << "N = " << N << " et M = " << M << endl;
+
+			//stocker le n° nb ressources
+			fichier >> str;
+			fichier >> nbRessources;
+			fichier >> str;
+
+			//mettre le curseur sur le premier des sections sommets
+			getline(fichier, line);
+			getline(fichier, line);
+
+			// parcours des secgions sommets et stockage des valeurs de chaque sommets
+			while (line !="sources"){
+
+				strcpy(msg, line.c_str());
+				vector<char *> message;
+				char * pch = strtok(msg, " ");
+
+				while (pch != NULL)
+				{
+					message.push_back(trimChar(pch));
+					pch = strtok(NULL, " ");
+				}
+
+				for (vector<char *>::iterator iter = message.begin(); iter != message.end(); iter++)
+					cout << *iter << endl;
+
+				getline(fichier, line);
+		
+			}
+
+			
 		}
+		else{
+			// Erreur (La chaîne ne corresponds pas au format)
+			cout << "Erreur de valeur du M " << endl;
+		}
+
 	}
 	else
 	{
 		cout << "ERREUR: Impossible d'ouvrir le fichier en lecture." << endl;
 	}
-
-	*/
 
 	system("PAUSE");
 
