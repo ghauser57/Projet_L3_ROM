@@ -1,11 +1,11 @@
 #pragma once
-#include "LectureGPR.cpp"
+#include "LectureGPR.h"
 
 
 
 int main()
 {
-	GprToGraphe();
+	GprToGraphe("gpr_files/data_VRPTW_10.gpr");
 
 	system("PAUSE");
 
