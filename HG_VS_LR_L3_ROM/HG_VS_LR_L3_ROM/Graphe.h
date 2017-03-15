@@ -8,8 +8,6 @@
 template <class S, class T>
 class Graphe
 {
-protected:
-	int prochaineClef;
 public:
 	vector<Sommet<T> *> lSommets; // liste de sommets
 	vector<Arete<S, T> *> lAretes; // liste d'arêtes
