@@ -4,8 +4,7 @@
 #include <vector>
 #include "Sommet.h"
 #include "Arete.h"
-
-//tu es puanteur te dis-je ! Ldfzfzefzefzefzefzefzefzfzefzfzefzefzefzeff
+#include "Pile.h"
 
 template <class S, class T>
 class Graphe
@@ -62,6 +61,9 @@ public:
 	//const S cout() const;
 	//void changementAleatoire();
 	//---------------------- Graphe ----------------------------------
+
+	//Detection de circuit dans un graphe
+	bool hasCircuit(const Graphe<S, T> & graphe);
 };
 /**
 * crée un graphe vide
@@ -213,4 +215,44 @@ vector< pair< Sommet<T> *, Arete<S, T>* > >  Graphe<S, T>::adjacencesPlus(const 
 		if (sommet == lAretes.at(i)->debut)
 			r.push_back(new pair< Sommet<T> *, Arete<S, T>* >(lAretes.at(i)->fin, lAretes.at(i)));
 	return r;
+}
+
+template <class S, class T>
+bool hasCircuit(const Graphe<S, T> & graphe){
+
+	Pile<T> * a_traiter;
+	int nbSommets = 0;
+
+	for (int unsigned i = 0; i < lSommets.size(); i++){
+		lSommets.at(i)->nbPredec = 0;
+	}
+
+	for (int unsigned i = 0; i < lSommets.size(); i++){
+		vector< pair< Sommet<T> *, Arete<S, T>* > > adjP = adjacencesPlus(lSommets.at(i));
+		for (int unsigned i = 0; i < adjP.size(); i++){
+			lSommets.at(i)->nbPredec++;
+		}
+	}
+
+	for (int unsigned i = 0; i < lSommets.size(); i++){
+		if (lSommets.at(i)->nbPredec == 0){
+			a_traiter = new Pile<T>(lSommets.at(i), a_traiter);
+			nbSommets++;
+		}
+	}
+
+	while (a_traiter != NULL){
+		Sommet<T> * s = a_traiter->depiler();
+
+		vector< pair< Sommet<T> *, Arete<S, T>* > > adjP = adjacencesPlus(lSommets.at(i));
+		for (int unsigned i = 0; i < adjP.size(); i++){
+			lSommets.at(i)->nbPredec--;
+			if (lSommets.at(i)->nbPredec == 0){
+				a_traiter = new Pile<T>(lSommets.at(i), a_traiter);
+				nbSommets++;
+			}
+		}
+	}
+
+	return !(nbSommets == lSommets.size());
 }

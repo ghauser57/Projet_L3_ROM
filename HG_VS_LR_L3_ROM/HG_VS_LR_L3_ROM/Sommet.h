@@ -10,8 +10,9 @@ public:
 	int degre;
 	string nom;
 	T bornInf, bornSup;
-	Sommet(const string & nom, const T & bornInf, const T & bornSup) :degre(0), nom(nom), bornInf(bornInf), bornSup(bornSup){}
-	Sommet(const Sommet<T> & s) :degre(s.degre), nom(s.nom), bornInf(s.bornInf), bornSup(s.bornSup){}
+	int nbPredec;
+	Sommet(const string & nom, const T & bornInf, const T & bornSup) :degre(0), nom(nom), bornInf(bornInf), bornSup(bornSup), nbPredec(0){}
+	Sommet(const Sommet<T> & s) :degre(s.degre), nom(s.nom), bornInf(s.bornInf), bornSup(s.bornSup), nbPredec(s.nbPredec){}
 	bool operator == (const Sommet<T> & s) const;
 	bool operator != (const Sommet<T> & s) const;
 	operator string () const;
@@ -35,7 +36,7 @@ ostream & operator << (ostream & os, const Sommet<T> & sommet)
 template <class T>
 bool Sommet<T>::operator == (const Sommet<T> & s) const
 {
-	return (this->degre == s.degre && this->nom == s.nom && this->bornInf == s.bornInf && this->bornSup == s.bornSup);
+	return (this->degre == s.degre && this->nom == s.nom && this->bornInf == s.bornInf && this->bornSup == s.bornSup && this->nbPredec == s.nbPredec);
 }
 template <class T>
 bool Sommet<T>::operator != (const Sommet<T> & s) const
