@@ -5,7 +5,7 @@
 #include "Sommet.h"
 #include "Arete.h"
 
-//tu es puanteur te dis-je ! KLDFFOOIf
+//tu es puanteur te dis-je ! LOL
 
 template <class S, class T>
 class Graphe
