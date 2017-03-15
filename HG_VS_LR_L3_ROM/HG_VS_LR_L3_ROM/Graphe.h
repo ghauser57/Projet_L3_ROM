@@ -66,7 +66,7 @@ public:
 *
 * */
 template <class S, class T>
-Graphe<S, T>::Graphe() :prochaineClef(0), lAretes(NULL), lSommets(NULL){}
+Graphe<S, T>::Graphe() :lAretes(NULL), lSommets(NULL){}
 template <class S, class T>
 Graphe<S, T>::Graphe(const Graphe<S, T> & graphe) :lAretes(NULL), lSommets(NULL)
 {
