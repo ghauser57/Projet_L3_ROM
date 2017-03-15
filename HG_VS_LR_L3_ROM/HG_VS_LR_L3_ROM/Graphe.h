@@ -70,7 +70,7 @@ public:
 template <class S, class T>
 Graphe<S, T>::Graphe() :prochaineClef(0), lAretes(NULL), lSommets(NULL){}
 template <class S, class T>
-Graphe<S, T>::Graphe(const Graphe<S, T> & graphe) : prochaineClef(graphe.prochaineClef), lAretes(NULL), lSommets(NULL)
+Graphe<S, T>::Graphe(const Graphe<S, T> & graphe) :lAretes(NULL), lSommets(NULL)
 {
 	for (int unsigned i = 0; i < graphe.lSommets.size(); i++)
 	{
@@ -90,7 +90,7 @@ Graphe<S, T>::Graphe(const Graphe<S, T> & graphe) : prochaineClef(graphe.prochai
 			j++;
 		}
 		S * v = new S((graphe.lAretes.at(i)->v));
-		lAretes.push_back(new Arete<S, T>(graphe.lAretes.at(i)->clef, tempSdeb, tempSfin, *v));
+		lAretes.push_back(new Arete<S, T>(tempSdeb, tempSfin, *v));
 	}
 }
 
