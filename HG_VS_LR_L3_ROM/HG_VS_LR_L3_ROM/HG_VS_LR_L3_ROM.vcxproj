@@ -66,15 +66,12 @@
   <ItemGroup>
     <ClInclude Include="Arete.h" />
     <ClInclude Include="Erreur.h" />
-    <ClInclude Include="GElement.h" />
     <ClInclude Include="Graphe.h" />
     <ClInclude Include="Sommet.h" />
     <ClInclude Include="Vecteur2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Erreur.cpp" />
-    <ClCompile Include="GElement.cpp" />
-    <ClCompile Include="LectureGPR.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Vecteur2D.cpp" />
   </ItemGroup>

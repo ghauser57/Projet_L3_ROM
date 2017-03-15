@@ -5,6 +5,8 @@
 #include "Sommet.h"
 #include "Arete.h"
 
+//tu es puanteur te dis-je !
+
 template <class S, class T>
 class Graphe
 {
