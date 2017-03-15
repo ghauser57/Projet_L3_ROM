@@ -15,11 +15,11 @@ class Arete : public GElement
 {
 public:
 	Sommet <T> *debut, *fin;
-	S v;
-	Arete(int clef, Sommet<T> * debut, Sommet<T> * fin, const S & v) :
-		GElement(clef), debut(debut), fin(fin), v(v){}
+	S cout, temps;
+	Arete(int clef, Sommet<T> * debut, Sommet<T> * fin, const S & cout, , const S & temps) :
+		GElement(clef), debut(debut), fin(fin), cout(cout), temps(temps){}
 	Arete(const Arete<S, T> & a) :
-		GElement(a.clef), debut(new Sommet<T>(*a.debut)), fin(new Sommet<T>(*a.fin)), v(a.v){}
+		GElement(a.clef), debut(new Sommet<T>(*a.debut)), fin(new Sommet<T>(*a.fin)), cout(a.cout), temps(a.temps){}
 
 	operator string () const;
 

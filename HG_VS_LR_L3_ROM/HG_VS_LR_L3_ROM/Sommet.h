@@ -10,9 +10,9 @@ class Sommet : public GElement
 public:
 	int degre;
 	string nom;
-	T v;
-	Sommet(const int clef, const string & nom, const T & v) :GElement(clef), degre(0), nom(nom), v(v){}
-	Sommet(const Sommet<T> & s) :GElement(s.clef), degre(s.degre), nom(s.nom), v(s.v){}
+	T bornInf, bornSup;
+	Sommet(const int clef, const string & nom, const T & bornInf, const T & bornSup) :GElement(clef), degre(0), nom(nom), bornInf(bornInf), bornSup(bornSup){}
+	Sommet(const Sommet<T> & s) :GElement(s.clef), degre(s.degre), nom(s.nom), bornInf(s.bornInf), bornSup(s.bornSup){}
 	bool operator == (const Sommet<T> & s) const;
 	bool operator != (const Sommet<T> & s) const;
 	operator string () const;
@@ -37,7 +37,7 @@ ostream & operator << (ostream & os, const Sommet<T> & sommet)
 template <class T>
 bool Sommet<T>::operator == (const Sommet<T> & s) const
 {
-	return (this->clef == s.clef && this->degre == s.degre && this->nom == s.nom && this->v == s.v);
+	return (this->clef == s.clef && this->degre == s.degre && this->nom == s.nom && this->bornInf == s.bornInf && this->bornSup == s.bornSup);
 }
 template <class T>
 bool Sommet<T>::operator != (const Sommet<T> & s) const

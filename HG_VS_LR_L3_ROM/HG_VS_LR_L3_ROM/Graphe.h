@@ -45,11 +45,10 @@ public:
 	/**
 	recherche la liste des paires (voisin, arête) adjacentes de sommet dans le graphe
 	*/
-	vector< pair< Sommet<T> *, Arete<S, T>* > >
+	PElement< pair< Sommet<T> *, Arete<S, T>* > >  *
 		adjacences(const Sommet<T> * sommet) const;
-	vector< pair< Sommet<T> *, Arete<S, T>* > >
+	PElement< pair< Sommet<T> *, Arete<S, T>* > >  *
 		adjacencesPlus(const Sommet<T> * sommet) const;
-
 	operator string() const;
 	/**
 	* cherche l'arête s1 - s2 ou l'arête s2 - s1 si elle existe
@@ -68,29 +67,27 @@ public:
 *
 * */
 template <class S, class T>
-Graphe<S, T>::Graphe() :prochaineClef(0), lAretes(NULL), lSommets(NULL){}
+Graphe<S, T>::Graphe() :prochaineClef(0), lAretes(new vector<Arete<S, T>>()), lSommets(new vector<Sommet<T>>()){}
 template <class S, class T>
-Graphe<S, T>::Graphe(const Graphe<S, T> & graphe) : prochaineClef(graphe.prochaineClef), lAretes(NULL), lSommets(NULL)
+Graphe<S, T>::Graphe(const Graphe<S, T> & graphe) : prochaineClef(graphe.prochaineClef), lAretes(*new vector<Arete<S, T>>()), lSommets(*new vector<Sommet<T>>(*graphe.lSommets))
 {
-	for (int unsigned i = 0; i < graphe.lSommets.size(); i++)
-	{
-		lSommets.push_back(new Sommet<T>(*graphe.lSommets.at(i)));
-	}
 	for (int unsigned i = 0; i<graphe.lAretes.size(); i++)
+	{  
+
+	}
+	PElement<Arete<S, T>> * temp = graphe.lAretes;
+	while (temp != NULL)
 	{
-		Sommet<T> * tempSdeb = NULL;
-		Sommet<T> * tempSfin = NULL;
-		int unsigned j = 0;
-		while ((tempSdeb == NULL || tempSfin == NULL) && j < lSommets.size())
-		{
-			if (*graphe.lAretes.at(i)->debut == *lSommets.at(j))
-				tempSdeb = lSommets.at(j);
-			if (*graphe.lAretes.at(i)->fin == *lSommets.at(j))
-				tempSfin = lSommets.at(j);
-			j++;
-		}
-		S * v = new S((graphe.lAretes.at(i)->v));
-		lAretes.push_back(new Arete<S, T>(graphe.lAretes.at(i)->clef, tempSdeb, tempSfin, *v));
+		PElement<Sommet<T>> * tempSdeb = lSommets;
+		PElement<Sommet<T>> * tempSfin = lSommets;
+
+		while (*temp->v->debut != *tempSdeb->v && tempSdeb != NULL)
+			tempSdeb = tempSdeb->s;
+		while (*temp->v->fin != *tempSfin->v && tempSfin != NULL)
+			tempSfin = tempSfin->s;
+		S * v = new S((temp->v->v));
+		//lAretes = new PElement<Arete<S, T>>(new Arete<S, T>(temp->v->clef, tempSdeb->v, tempSfin->v, *v), lAretes);
+		temp = temp->s;
 	}
 }
 
@@ -107,10 +104,8 @@ const Graphe<S, T> & Graphe<S, T>::operator = (const Graphe<S, T> & graphe)
 template <class S, class T>
 Graphe<S, T>::~Graphe()
 {
-	for (int unsigned i = 0; i < lAretes.size(); i++)
-		delete(lAretes.at(i));
-	for (int unsigned i = 0; i < lSommets.size(); i++)
-		delete(lSommets.at(i));
+	PElement< Arete<S, T>>::efface2(this->lAretes);
+	PElement<Sommet<T> >::efface2(this->lSommets);
 }
 
 /**
@@ -118,9 +113,9 @@ Graphe<S, T>::~Graphe()
 *
 * */
 template <class S, class T>
-Sommet<T> * Graphe<S, T>::creeSommet(const string & nom, const T & info)
+Sommet<T> * Graphe<S, T>::creeSommet(const string & nom, const T & bornInf, const T & bornSup)
 {
-	Sommet<T> * sommetCree = new Sommet<T>(prochaineClef++, nom, info);
+	Sommet<T> * sommetCree = new Sommet<T>(prochaineClef++, nom, bornInf, bornSup);
 	lSommets.push_back(sommetCree);
 	return sommetCree;
 }
@@ -130,13 +125,13 @@ Sommet<T> * Graphe<S, T>::creeSommet(const string & nom, const T & info)
 * met à jour les champs degre de debut et de fin
 * */
 template <class S, class T>
-Arete<S, T> * Graphe<S, T>::creeArete(Sommet<T> * debut, Sommet<T> * fin, const S & info)
+Arete<S, T> * Graphe<S, T>::creeArete(Sommet<T> * debut, Sommet<T> * fin, const S & cout, const S & temps)
 {
 	Arete<S, T> * nouvelleArete;
 	// ici tester que les 2 sommets sont bien existants dans le graphe
 	//if(!PElement< Sommet<T> >::appartient(debut, lSommets)) throw Erreur("début d'arête non défini");
 	//if(!PElement< Sommet<T> >::appartient(fin, lSommets)) throw Erreur("fin d'arête non définie");
-	nouvelleArete = new Arete<S, T>(prochaineClef++, debut, fin, info);
+	nouvelleArete = new Arete<S, T>(prochaineClef++, debut, fin, cout, temps);
 	lAretes.push_back(nouvelleArete);
 	debut->degre++; fin->degre++;
 	return nouvelleArete;
@@ -155,18 +150,12 @@ template <class S, class T>
 Graphe<S, T>::operator string() const
 {
 	ostringstream oss;
-	int tailleLSommets = (int)this->lSommets.size();
-	int tailleLAretes = (int)this->lAretes.size();
 	oss << "Graphe( \n";
 	oss << "prochaine clef = " << this->prochaineClef << endl;
-	oss << "nombre de sommets = " << tailleLSommets << "\n";
-	oss << "liste des sommets = " << "\n";
-	for (int  i = 0; i < tailleLSommets; i++)
-		oss << *lSommets.at(i) << "\n";
-	oss << "nombre d'arêtes = " << (int)this->lAretes.size() << "\n";
-	oss << "liste des arêtes = " << "\n";
-	for (int  i = 0; i < tailleLAretes; i++)
-		oss << *lAretes.at(i) << "\n";
+	oss << "nombre de sommets = " << this->nombreSommets() << "\n";
+	oss << PElement<Sommet<T> >::toString(lSommets, "", "\n", "");
+	oss << "nombre d'arêtes = " << this->nombreAretes() << "\n";
+	oss << PElement<Arete<S, T> >::toString(lAretes, "", "\n", "");
 	oss << ")";
 	return oss.str();
 }
@@ -185,33 +174,41 @@ ostream & operator << (ostream & os, const Graphe<S, T> & gr)
 template <class S, class T>
 Arete<S, T> * Graphe<S, T>::getAreteParSommets(const Sommet<T> * s1, const Sommet<T> * s2) const
 {
-	for (int unsigned i = 0; i < lAretes.size(); i++)
-		if (lAretes.at(i)->estEgal(s1, s2))
-			return lAretes.at(i);
+	PElement<Arete<S, T> > * l;
+	for (l = this->lAretes; l; l = l->s)
+		if (l->v->estEgal(s1, s2))
+			return l->v;
 	return NULL;
 }
 /**
 recherche la liste des paires (voisin, arête) adjacentes de sommet dans le graphe
 */
 template <class S, class T>
-vector< pair< Sommet<T> *, Arete<S, T>* > >  Graphe<S, T>::adjacences(const Sommet<T> * sommet) const
+PElement< pair< Sommet<T> *, Arete<S, T>* > >  *  Graphe<S, T>::adjacences(const Sommet<T> * sommet) const
 {
-	vector< pair< Sommet<T> *, Arete<S, T>* > > r();    // pair< Sommet<T> *, Arete<S,T>* >
-	for (int unsigned i = 0; i < lAretes.size(); i++)
-		if (sommet == lAretes.at(i)->debut)
-			r.push_back(new pair< Sommet<T> *, Arete<S, T>* >(lAretes.at(i)->fin, lAretes.at(i)));
+	const PElement< Arete<S, T> > * l;
+	PElement< pair< Sommet<T> *, Arete<S, T>* > > * r;    // pair< Sommet<T> *, Arete<S,T>* >
+	for (l = lAretes, r = NULL; l; l = l->s)
+		if (sommet == l->v->debut)
+			r = new PElement< pair< Sommet<T> *, Arete<S, T>* > >
+			(new pair< Sommet<T> *, Arete<S, T>* >(l->v->fin, l->v), r);
 		else
-			if (sommet == lAretes.at(i)->fin)
-				r.push_back(new pair< Sommet<T> *, Arete<S, T>* >(lAretes.at(i)->debut, lAretes.at(i)));
+			if (sommet == l->v->fin)
+				r = new PElement< pair< Sommet<T> *, Arete<S, T>* > >
+				(new pair< Sommet<T> *, Arete<S, T>* >
+				(l->v->debut, l->v), r);
 	return r;
 }
-
 template <class S, class T>
-vector< pair< Sommet<T> *, Arete<S, T>* > >  Graphe<S, T>::adjacencesPlus(const Sommet<T> * sommet) const
+PElement< pair< Sommet<T> *, Arete<S, T>* > >  *  Graphe<S, T>::adjacencesPlus(const Sommet<T> * sommet) const
 {
-	vector< pair< Sommet<T> *, Arete<S, T>* > > r();    // pair< Sommet<T> *, Arete<S,T>* >
-	for (int unsigned i = 0; i < lAretes.size(); i++)
-		if (sommet == lAretes.at(i)->debut)
-			r.push_back(new pair< Sommet<T> *, Arete<S, T>* >(lAretes.at(i)->fin, lAretes.at(i)));
+	const PElement< Arete<S, T> > * l;
+	PElement< pair< Sommet<T> *, Arete<S, T>* > > * r;    // pair< Sommet<T> *, Arete<S,T>* >
+	for (l = lAretes, r = NULL; l; l = l->s)
+	{
+		if (sommet == l->v->debut)
+			r = new PElement< pair< Sommet<T> *, Arete<S, T>* > >
+			(new pair< Sommet<T> *, Arete<S, T>* >(l->v->fin, l->v), r);
+	}
 	return r;
 }
