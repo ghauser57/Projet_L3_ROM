@@ -34,14 +34,14 @@ public:
 	/**
 	* crée un sommet isolé
 	* */
-	Sommet<T> * creeSommet(const string & nom, const T & info);
+	Sommet<T> * creeSommet(const string & nom, const T & bornInf, const T & bornSup);
 	/**
 	* crée une arête joignant les 2 sommets debut et fin
 	*
 	* * met à jour les champs degré de debut et de fin
 	* */
 	Arete<S, T> *
-		creeArete(Sommet<T> * debut, Sommet<T> * fin, const S & info);
+		creeArete(Sommet<T> * debut, Sommet<T> * fin, const S & cout, const S & temps);
 	/**
 	recherche la liste des paires (voisin, arête) adjacentes de sommet dans le graphe
 	*/
@@ -98,7 +98,6 @@ template <class S, class T>
 const Graphe<S, T> & Graphe<S, T>::operator = (const Graphe<S, T> & graphe)
 {
 	Graphe<S, T> * temp = new Graphe<S, T>(graphe);
-	this->prochaineClef = temp->prochaineClef;
 	this->lAretes = temp->lAretes;
 	this->lSommets = temp->lSommets;
 	return *this;
@@ -118,9 +117,9 @@ Graphe<S, T>::~Graphe()
 *
 * */
 template <class S, class T>
-Sommet<T> * Graphe<S, T>::creeSommet(const string & nom, const T & info)
+Sommet<T> * Graphe<S, T>::creeSommet(const string & nom, const T & bornInf, const T & bornSup)
 {
-	Sommet<T> * sommetCree = new Sommet<T>(prochaineClef++, nom, info);
+	Sommet<T> * sommetCree = new Sommet<T>(nom, bornInf, bornSup);
 	lSommets.push_back(sommetCree);
 	return sommetCree;
 }
@@ -130,13 +129,13 @@ Sommet<T> * Graphe<S, T>::creeSommet(const string & nom, const T & info)
 * met à jour les champs degre de debut et de fin
 * */
 template <class S, class T>
-Arete<S, T> * Graphe<S, T>::creeArete(Sommet<T> * debut, Sommet<T> * fin, const S & info)
+Arete<S, T> * Graphe<S, T>::creeArete(Sommet<T> * debut, Sommet<T> * fin, const S & cout, const S & temps)
 {
 	Arete<S, T> * nouvelleArete;
 	// ici tester que les 2 sommets sont bien existants dans le graphe
 	//if(!PElement< Sommet<T> >::appartient(debut, lSommets)) throw Erreur("début d'arête non défini");
 	//if(!PElement< Sommet<T> >::appartient(fin, lSommets)) throw Erreur("fin d'arête non définie");
-	nouvelleArete = new Arete<S, T>(prochaineClef++, debut, fin, info);
+	nouvelleArete = new Arete<S, T>(debut, fin, cout, temps);
 	lAretes.push_back(nouvelleArete);
 	debut->degre++; fin->degre++;
 	return nouvelleArete;

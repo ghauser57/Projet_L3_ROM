@@ -1,5 +1,4 @@
 #pragma once
-#include "GElement.h"
 /**
 représente une arête d'un graphe en général.
 Une arête est définie par un sommet-début et par un sommet-fin et par une information v.
