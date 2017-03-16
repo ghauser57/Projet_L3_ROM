@@ -63,7 +63,10 @@ public:
 	//---------------------- Graphe ----------------------------------
 
 	//Detection de circuit dans un graphe
-	bool hasCircuit(const Graphe<S, T> & graphe);
+	bool hasCircuit();
+
+	//Parcours DFS du graphe
+	Pile<T> * parcoursDFS(Sommet<T> * deb, Sommet<T> * fin);
 };
 /**
 * crée un graphe vide
@@ -218,7 +221,7 @@ vector< pair< Sommet<T> *, Arete<S, T>* > >  Graphe<S, T>::adjacencesPlus(const 
 }
 
 template <class S, class T>
-bool hasCircuit(const Graphe<S, T> & graphe){
+bool Graphe<S, T>::hasCircuit(){
 
 	Pile<T> * a_traiter;
 	int nbSommets = 0;
@@ -246,7 +249,7 @@ bool hasCircuit(const Graphe<S, T> & graphe){
 
 		vector< pair< Sommet<T> *, Arete<S, T>* > > adjP = adjacencesPlus(lSommets.at(i));
 		for (int unsigned i = 0; i < adjP.size(); i++){
-			lSommets.at(i)->nbPredec--;
+			lSommets.at(i).first->nbPredec--;
 			if (lSommets.at(i)->nbPredec == 0){
 				a_traiter = new Pile<T>(lSommets.at(i), a_traiter);
 				nbSommets++;
@@ -255,4 +258,20 @@ bool hasCircuit(const Graphe<S, T> & graphe){
 	}
 
 	return !(nbSommets == lSommets.size());
+}
+
+template <class S, class T>
+Pile<T> * Graphe<S, T>::parcoursDFS(Sommet<T> * deb, Sommet<T> * fin, Pile<T> * pile){
+
+	deb->marquage = true;
+	vector< pair< Sommet<T> *, Arete<S, T>* > > adjP = adjacencesPlus(lSommets.at(i));
+	for (int unsigned i = 0; i < adjP.size(); i++){
+
+	}
+
+	explorer(graphe G, sommet s)
+		marquer le sommet s
+		pour tout sommet t voisin du sommet s
+		si t n'est pas marqué alors
+		explorer(G, t);
 }
