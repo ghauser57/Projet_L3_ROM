@@ -1,7 +1,7 @@
 #pragma once
 /**
-Sommet d'un graphe en général
-v est l'information associée au sommet : elle dépend de l'application du graphe
+Sommet d'un graphe en gÃ©nÃ©ral
+v est l'information associÃ©e au sommet : elle dÃ©pend de l'application du graphe
 */
 template <class T>
 class Sommet
@@ -11,9 +11,11 @@ public:
 	string nom;
 	T bornInf, bornSup;
 	int nbPredec;
-	Sommet(const string & nom, const T & bornInf, const T & bornSup) :degre(0), nom(nom), bornInf(bornInf), bornSup(bornSup), nbPredec(0){}
-	Sommet(const string & nom) :degre(0), nom(nom), bornInf(0), bornSup(0), nbPredec(0){}
-	Sommet(const Sommet<T> & s) :degre(s.degre), nom(s.nom), bornInf(s.bornInf), bornSup(s.bornSup), nbPredec(s.nbPredec){}
+	bool marquage;
+	
+	Sommet(const string & nom, const T & bornInf, const T & bornSup) :degre(0), nom(nom), bornInf(bornInf), bornSup(bornSup), nbPredec(0), marquage(false){}
+	Sommet(const string & nom) :degre(0), nom(nom), bornInf(0), bornSup(0), nbPredec(0), marquage(false){}
+	Sommet(const Sommet<T> & s) :degre(s.degre), nom(s.nom), bornInf(s.bornInf), bornSup(s.bornSup), nbPredec(s.nbPredec), marquage(false){}
 	bool operator == (const Sommet<T> & s) const;
 	bool operator != (const Sommet<T> & s) const;
 	operator string () const;
