@@ -10,15 +10,13 @@ S est la nature de l'information portée par une arête
 */
 
 template <class S, class T>
-class Arete : public GElement
+class Arete
 {
 public:
 	Sommet <T> *debut, *fin;
 	S cout, temps;
-	Arete(int clef, Sommet<T> * debut, Sommet<T> * fin, const S & cout, , const S & temps) :
-		GElement(clef), debut(debut), fin(fin), cout(cout), temps(temps){}
-	Arete(const Arete<S, T> & a) :
-		GElement(a.clef), debut(new Sommet<T>(*a.debut)), fin(new Sommet<T>(*a.fin)), cout(a.cout), temps(a.temps){}
+	Arete(Sommet<T> * debut, Sommet<T> * fin, const S & cout, const S & temps) :debut(debut), fin(fin), cout(cout), temps(temps){}
+	Arete(const Arete<S, T> & a) :debut(new Sommet<T>(*a.debut)), fin(new Sommet<T>(*a.fin)), cout(a.cout), temps(a.temps){}
 
 	operator string () const;
 
@@ -39,11 +37,8 @@ Arete<S, T>::operator string () const
 {
 	ostringstream oss;
 
-	oss << "Arete  (" << endl;
-	oss << GElement::operator string() << endl;
-	oss << "clef debut = " << debut->clef << endl;
-	oss << "clef fin = " << fin->clef << endl;
-	oss << "v = " << v << endl;
+	oss << "Arete  (" << "Sommet1 :" << *debut->nom << " Sommet2: " << *fin->nom << " cout = " << cout << endl;
+	oss << " temps = " << temps << endl;
 	oss << ")";
 	return oss.str();
 }

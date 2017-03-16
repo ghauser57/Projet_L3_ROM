@@ -4,6 +4,7 @@
 
 #pragma once
 #include "Erreur.h"
+#include "Graphe.h"
 #include <fstream>
 #include <stdlib.h> 
 #include <vector>
@@ -41,6 +42,7 @@ void GprToGraphe(const string & fileName)
 		string str;
 		string nbRessources;
 		char msg[500];
+		vector<Sommet<int>*> * vSommets = new vector<Sommet<int>*>();
 
 		getline(fichier, line);
 
@@ -70,8 +72,24 @@ void GprToGraphe(const string & fileName)
 				pch = strtok(NULL, " ");
 			}
 
-			for (vector<char *>::iterator iter = sommets.begin(); iter != sommets.end(); iter++)
-				cout << *iter << endl;
+			int fenetreDebut, fenetreFin;
+			int sizeSom = sommets.size();
+			
+
+			if (sizeSom != 0){
+
+				if (sizeSom == 1){	
+					Sommet<int> * s = new Sommet<int>(sommets[0]);
+					vSommets->push_back(s);
+					cout << *s << endl;
+				}
+				else if (sizeSom == 3) {
+					Sommet<int> * s = new Sommet<int>(sommets[0], atoi(sommets[1]), atoi(sommets[2]));
+					vSommets->push_back(s);
+					cout << *s << endl;
+				}
+					
+			}
 
 			getline(fichier, line);
 
@@ -94,9 +112,10 @@ void GprToGraphe(const string & fileName)
 				sources.push_back(trimChar(pch));
 				pch = strtok(NULL, " ");
 			}
-
+		
 			for (vector<char *>::iterator iter = sources.begin(); iter != sources.end(); iter++)
-				cout << *iter << endl;
+				cout << *iter << " ";
+			cout << endl;
 
 			getline(fichier, line);
 		}
@@ -120,8 +139,8 @@ void GprToGraphe(const string & fileName)
 			}
 
 			for (vector<char *>::iterator iter = puits.begin(); iter != puits.end(); iter++)
-				cout << *iter << endl;
-
+				cout << *iter << " ";
+			cout << endl;
 			getline(fichier, line);
 
 		}
@@ -130,6 +149,10 @@ void GprToGraphe(const string & fileName)
 		cout << " ARCS" << endl;
 		cout << "==================" << endl;
 		getline(fichier, line);
+
+
+
+		cout << vSommets->size() << endl;
 
 		// parcours des secgions sommets et stockage des valeurs de chaque puits
 		while (line != "sectionGraphes"){
@@ -144,8 +167,36 @@ void GprToGraphe(const string & fileName)
 				pch = strtok(NULL, " ");
 			}
 
+			
 			for (vector<char *>::iterator iter = arcs.begin(); iter != arcs.end(); iter++)
-				cout << *iter << endl;
+				cout << *iter << " ";
+			cout << endl;
+			
+
+			int sizeArc = arcs.size();
+
+			
+			Sommet<int> * s2;
+
+			if (sizeArc != 0){
+				for (vector<Sommet<int>*>::iterator it = vSommets->begin(); it != vSommets->end(); ++it){
+					// TODO
+					//cout << **it << endl;
+					//Sommet<int> * s1 = new Sommet<int>(*(*it)->getSommetByName(string(arcs[1])));
+					//cout << "=============SOMMET DEBUT " << *s1 << endl;
+					
+					
+					//s2 = (*it)->getSommetByName(string(arcs[2]));
+				}
+			}
+			
+			/*
+			if (sizeArc == 5){
+				Arete<int, int> * a = new Arete<int, int>(s, s2, atoi(arcs[3]), atoi(arcs[4]));
+				cout << *a << endl;
+			}
+			*/
+			
 
 			getline(fichier, line);
 
@@ -169,8 +220,8 @@ void GprToGraphe(const string & fileName)
 			}
 
 			for (vector<char *>::iterator iter = arcs.begin(); iter != arcs.end(); iter++)
-				cout << *iter << endl;
-
+				cout << *iter << " ";
+			cout << endl;
 		}
 
 	}
