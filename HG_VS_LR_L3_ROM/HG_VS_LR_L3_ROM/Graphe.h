@@ -66,7 +66,7 @@ public:
 	bool hasCircuit();
 
 	//Parcours DFS du graphe
-	Pile<T> * parcoursDFS(Sommet<T> * deb, Sommet<T> * fin);
+	Pile<T> * parcoursDFS(Sommet<T> * deb, Sommet<T> * fin, Pile<T> * pile);
 };
 /**
 * crée un graphe vide
@@ -264,14 +264,26 @@ template <class S, class T>
 Pile<T> * Graphe<S, T>::parcoursDFS(Sommet<T> * deb, Sommet<T> * fin, Pile<T> * pile){
 
 	deb->marquage = true;
-	vector< pair< Sommet<T> *, Arete<S, T>* > > adjP = adjacencesPlus(lSommets.at(i));
-	for (int unsigned i = 0; i < adjP.size(); i++){
+	int nbMarque = 0;
 
+	pile->insertionOrdonnee(deb, pile);
+
+	if (deb != fin){
+
+		vector< pair< Sommet<T> *, Arete<S, T>* > > adj = adjacences(lSommets.at(i));
+
+		for (int unsigned i = 0; i < adj.size(); i++){
+
+			if (adj.at(i).first->marquage == false)
+				pile = parcoursDFS(adj.at(i).first, fin, pile);
+			else
+				nbMarque++;
+		}
+
+		if (nbMarque == adj.size()){
+			pile->depiler();
+			return pile;
+		}
 	}
-
-	explorer(graphe G, sommet s)
-		marquer le sommet s
-		pour tout sommet t voisin du sommet s
-		si t n'est pas marqué alors
-		explorer(G, t);
+	return pile;
 }
