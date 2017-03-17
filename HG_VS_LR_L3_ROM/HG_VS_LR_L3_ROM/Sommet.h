@@ -20,9 +20,6 @@ public:
 	bool operator != (const Sommet<T> & s) const;
 	operator string () const;
 
-	Sommet<T> * getSommetByName(string s){
-		if (this->nom == s) return this;
-	}
 };
 template <class T>
 Sommet<T>::operator string () const

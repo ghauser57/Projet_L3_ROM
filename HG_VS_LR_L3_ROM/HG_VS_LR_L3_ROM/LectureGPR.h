@@ -42,6 +42,7 @@ void GprToGraphe(const string & fileName)
 		string str;
 		string nbRessources;
 		char msg[500];
+		Graphe<int, int> * g = new Graphe<int, int>();
 		vector<Sommet<int>*> * vSommets = new vector<Sommet<int>*>();
 
 		getline(fichier, line);
@@ -72,7 +73,6 @@ void GprToGraphe(const string & fileName)
 				pch = strtok(NULL, " ");
 			}
 
-			int fenetreDebut, fenetreFin;
 			int sizeSom = sommets.size();
 			
 
@@ -95,12 +95,21 @@ void GprToGraphe(const string & fileName)
 
 		}
 
+		/*
+		PK CA MARCHE PAS WESH HELP
+		g->lSommets = new vector<Sommet<int>*>(vSommets);
+
+		for (vector<Sommet<int>*>::iterator it = (g->getSommets())->begin(); it != (g->getSommets())->end(); ++it){
+			cout << **it << endl;
+		}
+		*/
+
 		cout << "==================" << endl;
 		cout << " SOURCES" << endl;
 		cout << "==================" << endl;
 		getline(fichier, line);
 
-		// parcours des secgions sommets et stockage des valeurs de chaque sources
+		// parcours des sections sommets et stockage des valeurs de chaque sources
 		while (line != "puits"){
 
 			strcpy(msg, line.c_str());
@@ -176,17 +185,19 @@ void GprToGraphe(const string & fileName)
 			int sizeArc = arcs.size();
 
 			
+			Sommet<int> * s1;
 			Sommet<int> * s2;
 
 			if (sizeArc != 0){
 				for (vector<Sommet<int>*>::iterator it = vSommets->begin(); it != vSommets->end(); ++it){
-					// TODO
+					
 					//cout << **it << endl;
-					//Sommet<int> * s1 = new Sommet<int>(*(*it)->getSommetByName(string(arcs[1])));
-					//cout << "=============SOMMET DEBUT " << *s1 << endl;
-					
-					
-					//s2 = (*it)->getSommetByName(string(arcs[2]));
+					/*
+					s1 = g.getSommetByName(string(arcs[1]));					
+					s2 = g.getSommetByName(string(arcs[2]));
+					cout << "S1 = " << *s1 << endl;
+					cout << "S2 = " << *s2 << endl;
+					*/
 				}
 			}
 			

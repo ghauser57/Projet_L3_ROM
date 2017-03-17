@@ -30,6 +30,8 @@ public:
 	~Graphe();
 	int nombreSommets() const;
 	int nombreAretes() const;
+
+	Sommet<T> getSommetByName(string);
 	/**
 	* crée un sommet isolé
 	* */
@@ -67,11 +69,25 @@ public:
 
 	//Parcours DFS du graphe
 	Pile<T> * parcoursDFS(Sommet<T> * deb, Sommet<T> * fin, Pile<T> * pile);
+
+	
 };
 /**
 * crée un graphe vide
 *
 * */
+template <class S, class T>
+Sommet<T> Graphe<S, T>::getSommetByName(string s){
+	for (vector<Sommet<int>*>::iterator it = lSommets->begin(); it != lSommets->end(); ++it){
+		if (*it->nom == s){
+			return *it;
+		}
+		else{
+			throw "Sommet inexistant";
+		}
+	}
+}
+
 template <class S, class T>
 Graphe<S, T>::Graphe() :lAretes(NULL), lSommets(NULL){}
 template <class S, class T>
