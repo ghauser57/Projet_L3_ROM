@@ -31,7 +31,8 @@ public:
 	int nombreSommets() const;
 	int nombreAretes() const;
 
-	Sommet<T> getSommetByName(string);
+	Sommet<T>* getSommetByName(string);
+	void addSommet(Sommet<T> *s);
 	/**
 	* crée un sommet isolé
 	* */
@@ -77,15 +78,21 @@ public:
 *
 * */
 template <class S, class T>
-Sommet<T> Graphe<S, T>::getSommetByName(string s){
-	for (vector<Sommet<int>*>::iterator it = lSommets->begin(); it != lSommets->end(); ++it){
-		if (*it->nom == s){
+Sommet<T>* Graphe<S, T>::getSommetByName(string s){
+	for (vector<Sommet<int>*>::iterator it = lSommets.begin(); it != lSommets.end(); ++it){
+		if ((*it)->nom == s){
+			cout << " it->nom "<< (*it)->nom << "s " << s << endl;
 			return *it;
 		}
 		else{
 			throw "Sommet inexistant";
 		}
 	}
+}
+
+template <class S, class T>
+void Graphe<S, T>::addSommet(Sommet<T> *s){
+	lSommets.push_back(s);
 }
 
 template <class S, class T>

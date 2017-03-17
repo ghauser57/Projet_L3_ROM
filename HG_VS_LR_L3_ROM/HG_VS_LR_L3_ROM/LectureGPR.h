@@ -43,7 +43,6 @@ void GprToGraphe(const string & fileName)
 		string nbRessources;
 		char msg[500];
 		Graphe<int, int> * g = new Graphe<int, int>();
-		vector<Sommet<int>*> * vSommets = new vector<Sommet<int>*>();
 
 		getline(fichier, line);
 
@@ -80,30 +79,23 @@ void GprToGraphe(const string & fileName)
 
 				if (sizeSom == 1){	
 					Sommet<int> * s = new Sommet<int>(sommets[0]);
-					vSommets->push_back(s);
-					cout << *s << endl;
+					g->addSommet(s);
+					
 				}
 				else if (sizeSom == 3) {
-					Sommet<int> * s = new Sommet<int>(sommets[0], atoi(sommets[1]), atoi(sommets[2]));
-					vSommets->push_back(s);
-					cout << *s << endl;
-				}
-					
+					Sommet<int> * s1 = new Sommet<int>(sommets[0], atoi(sommets[1]), atoi(sommets[2]));
+					g->addSommet(s1);					
+				}				
 			}
 
 			getline(fichier, line);
 
 		}
 
-		/*
-		PK CA MARCHE PAS WESH HELP
-		g->lSommets = new vector<Sommet<int>*>(vSommets);
-
-		for (vector<Sommet<int>*>::iterator it = (g->getSommets())->begin(); it != (g->getSommets())->end(); ++it){
+		for (vector<Sommet<int>*>::iterator it = g->lSommets.begin(); it != g->lSommets.end(); ++it){
 			cout << **it << endl;
 		}
-		*/
-
+		
 		cout << "==================" << endl;
 		cout << " SOURCES" << endl;
 		cout << "==================" << endl;
@@ -159,10 +151,6 @@ void GprToGraphe(const string & fileName)
 		cout << "==================" << endl;
 		getline(fichier, line);
 
-
-
-		cout << vSommets->size() << endl;
-
 		// parcours des secgions sommets et stockage des valeurs de chaque puits
 		while (line != "sectionGraphes"){
 
@@ -189,16 +177,18 @@ void GprToGraphe(const string & fileName)
 			Sommet<int> * s2;
 
 			if (sizeArc != 0){
-				for (vector<Sommet<int>*>::iterator it = vSommets->begin(); it != vSommets->end(); ++it){
+				for (vector<Sommet<int>*>::iterator it = g->lSommets.begin(); it != g->lSommets.end(); ++it){
 					
-					//cout << **it << endl;
-					/*
-					s1 = g.getSommetByName(string(arcs[1]));					
-					s2 = g.getSommetByName(string(arcs[2]));
-					cout << "S1 = " << *s1 << endl;
-					cout << "S2 = " << *s2 << endl;
-					*/
+					cout << **it << endl;
+					// CA BUG ICI SVP
+					//s1 = g->getSommetByName(string(arcs[1]));					
+					//s2 = g->getSommetByName(string(arcs[2]));
+					//cout << "S1 = " << *s1 << endl;
+					//cout << "S2 = " << *s2 << endl;
+					
+					
 				}
+				
 			}
 			
 			/*
