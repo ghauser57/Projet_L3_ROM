@@ -28,16 +28,19 @@ Sommet<T>::operator string () const
 	oss << "Sommet(" << "degre = " << degre << " nom = " << nom << " bornInf " << bornInf << " bornSup " << bornSup << ")";
 	return oss.str();
 }
+
 template <class T>
 ostream & operator << (ostream & os, const Sommet<T> & sommet)
 {
 	return os << (string)sommet;
 }
+
 template <class T>
 bool Sommet<T>::operator == (const Sommet<T> & s) const
 {
 	return (this->degre == s.degre && this->nom == s.nom && this->bornInf == s.bornInf && this->bornSup == s.bornSup && this->nbPredec == s.nbPredec);
 }
+
 template <class T>
 bool Sommet<T>::operator != (const Sommet<T> & s) const
 {

@@ -32,11 +32,12 @@ public:
 	int nombreAretes() const;
 
 	Sommet<T>* getSommetByName(string);
-	void addSommet(Sommet<T> *s);
+
 	/**
 	* crée un sommet isolé
 	* */
 	Sommet<T> * creeSommet(const string & nom, const T & bornInf, const T & bornSup);
+	Sommet<T> * creeSommet2(const string & nom);
 	/**
 	* crée une arête joignant les 2 sommets debut et fin
 	*
@@ -79,26 +80,31 @@ public:
 * */
 template <class S, class T>
 Sommet<T>* Graphe<S, T>::getSommetByName(string s){
+	bool trouve = false;
+	Sommet<int> * som = new Sommet<int>("a");
 	for (vector<Sommet<int>*>::iterator it = lSommets.begin(); it != lSommets.end(); ++it){
 		if ((*it)->nom == s){
-			cout << " it->nom "<< (*it)->nom << "s " << s << endl;
-			return *it;
-		}
-		else{
-			throw "Sommet inexistant";
+			//cout << " it->nom "<< (*it)->nom << "s " << s << endl;
+			trouve = true;
+			som = new Sommet<int>(**it);
+
 		}
 	}
-}
-
-template <class S, class T>
-void Graphe<S, T>::addSommet(Sommet<T> *s){
-	lSommets.push_back(s);
+		
+	if (trouve){
+		return som;
+	}
+	else{
+		return NULL;
+	}
+	
 }
 
 template <class S, class T>
 Graphe<S, T>::Graphe() :lAretes(NULL), lSommets(NULL){}
+
 template <class S, class T>
-Graphe<S, T>::Graphe(const Graphe<S, T> & graphe) :lAretes(NULL), lSommets(NULL)
+Graphe<S, T>::Graphe(const Graphe<S, T> & graphe) : lAretes(NULL), lSommets(NULL)
 {
 	for (int unsigned i = 0; i < graphe.lSommets.size(); i++)
 	{
@@ -117,8 +123,8 @@ Graphe<S, T>::Graphe(const Graphe<S, T> & graphe) :lAretes(NULL), lSommets(NULL)
 				tempSfin = lSommets.at(j);
 			j++;
 		}
-		S * v = new S((graphe.lAretes.at(i)->v));
-		lAretes.push_back(new Arete<S, T>(tempSdeb, tempSfin, *v));
+		//S * v = new S((graphe.lAretes.at(i)->v));
+		lAretes.push_back(new Arete<S, T>(tempSdeb, tempSfin, graphe.lAretes.at(i)->cout, graphe.lAretes.at(i)->temps));
 	}
 }
 
@@ -148,6 +154,14 @@ template <class S, class T>
 Sommet<T> * Graphe<S, T>::creeSommet(const string & nom, const T & bornInf, const T & bornSup)
 {
 	Sommet<T> * sommetCree = new Sommet<T>(nom, bornInf, bornSup);
+	lSommets.push_back(sommetCree);
+	return sommetCree;
+}
+
+template <class S, class T>
+Sommet<T> * Graphe<S, T>::creeSommet2(const string & nom)
+{
+	Sommet<T> * sommetCree = new Sommet<T>(nom);
 	lSommets.push_back(sommetCree);
 	return sommetCree;
 }
@@ -185,12 +199,11 @@ Graphe<S, T>::operator string() const
 	int tailleLSommets = (int)this->lSommets.size();
 	int tailleLAretes = (int)this->lAretes.size();
 	oss << "Graphe( \n";
-	oss << "prochaine clef = " << this->prochaineClef << endl;
 	oss << "nombre de sommets = " << tailleLSommets << "\n";
 	oss << "liste des sommets = " << "\n";
 	for (int  i = 0; i < tailleLSommets; i++)
 		oss << *lSommets.at(i) << "\n";
-	oss << "nombre d'arêtes = " << (int)this->lAretes.size() << "\n";
+	oss << "nombre d'arêtes = " << tailleLAretes << "\n";
 	oss << "liste des arêtes = " << "\n";
 	for (int  i = 0; i < tailleLAretes; i++)
 		oss << *lAretes.at(i) << "\n";
@@ -246,7 +259,7 @@ vector< pair< Sommet<T> *, Arete<S, T>* > >  Graphe<S, T>::adjacencesPlus(const 
 template <class S, class T>
 bool Graphe<S, T>::hasCircuit(){
 
-	Pile<T> * a_traiter;
+	Pile<Sommet<T> *> * a_traiter;
 	int nbSommets = 0;
 
 	for (int unsigned i = 0; i < lSommets.size(); i++){

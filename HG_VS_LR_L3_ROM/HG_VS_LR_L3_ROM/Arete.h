@@ -37,9 +37,7 @@ Arete<S, T>::operator string () const
 {
 	ostringstream oss;
 
-	oss << "Arete  (" << "Sommet1 :" << *debut->nom << " Sommet2: " << *fin->nom << " cout = " << cout << endl;
-	oss << " temps = " << temps << endl;
-	oss << ")";
+	oss << "Arete (Sommet1: " << debut->nom << "  Sommet2: " << fin->nom << "  cout= " << cout << "  temps= " << temps << ")";
 	return oss.str();
 }
 
