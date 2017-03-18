@@ -37,14 +37,15 @@ public:
 	
 	vector< pair< Sommet<T> *, Arete<S, T>* > > adjacences(const Sommet<T> * sommet) const;
 	vector< pair< Sommet<T> *, Arete<S, T>* > > adjacencesPlus(const Sommet<T> * sommet) const;
+	vector< pair< Sommet<T> *, Arete<S, T>* > > adjacencesMoins(const Sommet<T> * sommet) const;
 
 	Arete<S, T> * getAreteParSommets(const Sommet<T> * s1, const Sommet<T> * s2) const;
 
 	bool hasCircuit();
 
 	/* Parcours DFS du graphe */
-	void Explore(Sommet<T> * i, int * k);
-	void Explore(Sommet<T> * i, pair<int, int> * paireKL);
+	void Explore1(Sommet<T> * i, vector<int> * K);
+	void Explore2(Sommet<T> * i, vector<int> * KLF);
 	void DFS(Sommet<T> * som);
 	void DFS();
 };
@@ -217,6 +218,20 @@ vector< pair< Sommet<T> *, Arete<S, T>* > >  Graphe<S, T>::adjacencesPlus(const 
 
 
 template <class S, class T>
+vector< pair< Sommet<T> *, Arete<S, T>* > >  Graphe<S, T>::adjacencesMoins(const Sommet<T> * sommet) const
+{
+	vector< pair< Sommet<T> *, Arete<S, T>* > > r();    // pair< Sommet<T> *, Arete<S,T>* >
+	for (int unsigned i = 0; i < lAretes.size(); i++)
+		if (sommet == lAretes.at(i)->fin)
+		{
+			pair< Sommet<T> *, Arete<S, T>* > paire(lAretes.at(i)->debut, lAretes.at(i));
+			r.push_back(paire);
+		}
+	return r;
+}
+
+
+template <class S, class T>
 Arete<S, T> * Graphe<S, T>::getAreteParSommets(const Sommet<T> * s1, const Sommet<T> * s2) const
 {
 	for (int unsigned i = 0; i < lAretes.size(); i++)
@@ -268,7 +283,7 @@ bool Graphe<S, T>::hasCircuit(){
 
 
 template <class S, class T>
-void Graphe<S, T>::Explore(Sommet<T> * i, int * k)
+void Graphe<S, T>::Explore1(Sommet<T> * i, vector<int> * K)
 {
 	vector<pair< Sommet<T> *, Arete<S, T>* >> successeurs = this->adjacencesPlus(i);
 	while (i->n > 0)
@@ -277,16 +292,16 @@ void Graphe<S, T>::Explore(Sommet<T> * i, int * k)
 		i->n = i->n - 1;
 		if (j->num == 0)
 		{
-			(*k) = (*k) + 1;
-			j->num = (*k);
-			this->Explore(j, k);
+			++K->at(0);
+			j->num = K->at(0);
+			this->Explore1(j, K);
 		}
 	}
 }
 
 
 template <class S, class T>
-void Graphe<S, T>::Explore(Sommet<T> * i, pair<int, int> * paireKL)
+void Graphe<S, T>::Explore2(Sommet<T> * i, vector<int> * KLF)
 {
 	vector<pair< Sommet<T> *, Arete<S, T>* >> successeurs = this->adjacencesPlus(i);
 	while (i->n > 0)
@@ -295,35 +310,41 @@ void Graphe<S, T>::Explore(Sommet<T> * i, pair<int, int> * paireKL)
 		i->n = i->n - 1;
 		if (j->num == 0)
 		{
-			++paireKL->first;
-			j->num = paireKL->first;
-			j->ncomp = paireKL->second;
-			this->Explore(j, paireKL);
+			++KLF->at(0);
+			j->num = KLF->at(0);
+			j->prefixe = KLF->at(0);
+			j->ncomp = KLF->at(1);
+			this->Explore2(j, KLF);
 		}
 	}
+	i->suffixe = KLF->at(2);
+	++KLF->at(2);
 }
 
 
 template <class S, class T>
 void Graphe<S, T>::DFS(Sommet<T> * som)
 {
-	int k = 1;
+	vector<int> * K = new vector<int>();
+	K->push_back(1);
 	for (int i = 0; i < (int)this->lSommets.size(); i++)
 	{
 		this->lSommets.at(i)->n = this->lSommets.at(i)->dPlus-1;
 		this->lSommets.at(i)->num = 0;
 	}
-	som->num = k;
-	this->Explore(som, &k);
+	som->num = K->at(0);
+	this->Explore1(som, K);
 }
 
 
 template <class S, class T>
 void Graphe<S, T>::DFS()
 {
-	pair<int, int> * paireKL = new pair<int, int>(1, 0);
-	//int * k = new int(1);
-	//int * l = new int(0);
+	vector<int> * KLF = new vector<int>();
+	KLF->push_back(1);
+	KLF->push_back(0);
+	KLF->push_back(0);
+
 	for (int i = 0; i < (int)this->lSommets.size(); i++)
 	{
 		this->lSommets.at(i)->n = this->lSommets.at(i)->dPlus-1;
@@ -333,9 +354,10 @@ void Graphe<S, T>::DFS()
 	for (int i = 0; i < (int)this->lSommets.size(); i++)
 		if (this->lSommets.at(i)->ncomp == 0)
 		{
-			this->lSommets.at(i)->num = paireKL->first;
-			++paireKL->second;
-			this->lSommets.at(i)->ncomp = paireKL->second;
-			this->Explore(this->lSommets.at(i), paireKL);
+			this->lSommets.at(i)->num = KLF->at(0);
+			this->lSommets.at(i)->prefixe = KLF->at(0);
+			++KLF->at(1);
+			this->lSommets.at(i)->ncomp = KLF->at(1);
+			this->Explore2(this->lSommets.at(i), KLF);
 		}		
 }
