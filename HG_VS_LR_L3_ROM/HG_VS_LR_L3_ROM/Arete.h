@@ -15,7 +15,11 @@ class Arete
 public:
 	Sommet <T> *debut, *fin;
 	S cout, temps;
-	Arete(Sommet<T> * debut, Sommet<T> * fin, const S & cout, const S & temps) :debut(debut), fin(fin), cout(cout), temps(temps){}
+	Arete(Sommet<T> * debut, Sommet<T> * fin, const S & cout, const S & temps) :debut(debut), fin(fin), cout(cout), temps(temps)
+	{
+		debut->dPlus++;
+		fin->dMoins++;
+	}
 	Arete(const Arete<S, T> & a) :debut(new Sommet<T>(*a.debut)), fin(new Sommet<T>(*a.fin)), cout(a.cout), temps(a.temps){}
 
 	operator string () const;

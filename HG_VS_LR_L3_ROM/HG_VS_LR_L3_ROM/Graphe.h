@@ -70,9 +70,10 @@ public:
 	bool hasCircuit();
 
 	//Parcours DFS du graphe
-	Pile<T> * parcoursDFS(Sommet<T> * deb, Sommet<T> * fin, Pile<T> * pile);
-
-	
+	void Explore(Sommet<T> * i, int & k);
+	void Explore(Sommet<T> * i, int & k, int & l);
+	void DFS(Sommet<T> * som);
+	void DFS();
 };
 /**
 * crée un graphe vide
@@ -297,29 +298,69 @@ bool Graphe<S, T>::hasCircuit(){
 }
 
 template <class S, class T>
-Pile<T> * Graphe<S, T>::parcoursDFS(Sommet<T> * deb, Sommet<T> * fin, Pile<T> * pile){
-
-	deb->marquage = true;
-	int nbMarque = 0;
-
-	pile->insertionOrdonnee(deb, pile);
-
-	if (deb != fin){
-
-		vector< pair< Sommet<T> *, Arete<S, T>* > > adj = adjacences(lSommets.at(i));
-
-		for (int unsigned i = 0; i < adj.size(); i++){
-
-			if (adj.at(i).first->marquage == false)
-				pile = parcoursDFS(adj.at(i).first, fin, pile);
-			else
-				nbMarque++;
-		}
-
-		if (nbMarque == adj.size()){
-			pile->depiler();
-			return pile;
+void Graphe<S, T>::Explore(Sommet<T> * i, int & k)
+{
+	vector<pair< Sommet<T> *, Arete<S, T>* >> successeurs = this->adjacencePlus(i);
+	while (i->n > 0)
+	{
+		Sommet<T> * j = successeurs.at(i->n).second;
+		i->n = i->n - 1;
+		if (j->num == 0)
+		{
+			k = k + 1;
+			j->num = k;
+			this->Explore1(j);
 		}
 	}
-	return pile;
+}
+
+template <class S, class T>
+void Graphe<S, T>::Explore(Sommet<T> * i, int & k, int & l)
+{
+	vector<pair< Sommet<T> *, Arete<S, T>* >> successeurs = this->adjacencePlus(i);
+	while (i->n > 0)
+	{
+		Sommet<T> * j = successeurs.at(i->n).second;
+		i->n = i->n - 1;
+		if (j->num == 0)
+		{
+			k = k + 1;
+			j->num = k;
+			this->Explore1(j);
+		}
+	}
+}
+
+template <class S, class T>
+void Graphe<S, T>::DFS(Sommet<T> * som)
+{
+	int k = 1;
+	for (int i = 0; i < (int)this->sommets.size(); i++)
+	{
+		this->sommets.at(i)->n = this->sommets.at(i)->dPlus;
+		this->sommets.at(i)->num = 0;
+	}
+	som->num = k;
+	this->Explore(som, k);
+}
+
+template <class S, class T>
+void Graphe<S, T>::DFS()
+{
+	int k = 1;
+	int l = 0;
+	for (int i = 0; i < (int)this->sommets.size(); i++)
+	{
+		this->sommets.at(i)->n = this->sommets.at(i)->dPlus;
+		this->sommets.at(i)->num = 0;
+		this->sommets.at(i)->ncomp = 0;
+	}
+	for (int i = 0; i < (int)this->sommets.size(); i++)
+		if (this->sommets.at(i)->ncomp == 0)
+		{
+			this->sommets.at(i)->num = k;
+			l++;
+			this->sommets.at(i)->ncomp = l;
+			this->Explore(this->sommets.at(i), k, l);
+		}		
 }
