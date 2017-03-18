@@ -13,6 +13,9 @@ public:
 	
 	vector<Sommet<T> *> lSommets; 
 	vector<Arete<S, T> *> lAretes; 
+
+	Sommet<T> * source;
+	Sommet<T> * puit;
 	
 	Graphe();
 	Graphe(const Graphe<S, T> & graphe);
@@ -48,15 +51,18 @@ public:
 
 
 template <class S, class T>
-Graphe<S, T>::Graphe() :lAretes(NULL), lSommets(NULL){}
+Graphe<S, T>::Graphe() :lAretes(NULL), lSommets(NULL), source(NULL), puit(NULL){}
 
 
 template <class S, class T>
-Graphe<S, T>::Graphe(const Graphe<S, T> & graphe) : lAretes(NULL), lSommets(NULL)
+Graphe<S, T>::Graphe(const Graphe<S, T> & graphe) : lAretes(NULL), lSommets(NULL), source(NULL), puit(NULL)
 {
 	for (int unsigned i = 0; i < graphe.lSommets.size(); i++)
 	{
 		lSommets.push_back(new Sommet<T>(*graphe.lSommets.at(i)));
+		if (*graphe.source == *lSommets.at(i)){
+			source = lSommets.at(i);
+		}
 	}
 	for (int unsigned i = 0; i<graphe.lAretes.size(); i++)
 	{
