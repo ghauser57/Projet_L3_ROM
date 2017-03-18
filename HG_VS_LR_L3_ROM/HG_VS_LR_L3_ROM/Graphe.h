@@ -81,24 +81,13 @@ public:
 * */
 template <class S, class T>
 Sommet<T>* Graphe<S, T>::getSommetByName(string s){
-	bool trouve = false;
-	Sommet<int> * som = new Sommet<int>("a");
+
 	for (vector<Sommet<int>*>::iterator it = lSommets.begin(); it != lSommets.end(); ++it){
 		if ((*it)->nom == s){
-			//cout << " it->nom "<< (*it)->nom << "s " << s << endl;
-			trouve = true;
-			som = new Sommet<int>(**it);
-
+			return *it;
 		}
 	}
-		
-	if (trouve){
-		return som;
-	}
-	else{
-		return NULL;
-	}
-	
+	return NULL;
 }
 
 template <class S, class T>
@@ -180,7 +169,7 @@ Arete<S, T> * Graphe<S, T>::creeArete(Sommet<T> * debut, Sommet<T> * fin, const 
 	//if(!PElement< Sommet<T> >::appartient(fin, lSommets)) throw Erreur("fin d'arête non définie");
 	nouvelleArete = new Arete<S, T>(debut, fin, cout, temps);
 	lAretes.push_back(nouvelleArete);
-	debut->degre++; fin->degre++;
+	//debut->degre++; fin->degre++;
 	return nouvelleArete;
 }
 template <class S, class T>
