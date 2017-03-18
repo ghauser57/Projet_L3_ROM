@@ -40,8 +40,8 @@ public:
 	bool hasCircuit();
 
 	/* Parcours DFS du graphe */
-	void Explore(Sommet<T> * i, int & k);
-	void Explore(Sommet<T> * i, int & k, int & l);
+	void Explore(Sommet<T> * i, int * k);
+	void Explore(Sommet<T> * i, pair<int, int> * paireKL);
 	void DFS(Sommet<T> * som);
 	void DFS();
 };
@@ -199,10 +199,13 @@ vector< pair< Sommet<T> *, Arete<S, T>* > >  Graphe<S, T>::adjacences(const Somm
 template <class S, class T>
 vector< pair< Sommet<T> *, Arete<S, T>* > >  Graphe<S, T>::adjacencesPlus(const Sommet<T> * sommet) const
 {
-	vector< pair< Sommet<T> *, Arete<S, T>* > > r();    // pair< Sommet<T> *, Arete<S,T>* >
+	vector< pair< Sommet<T> *, Arete<S, T>* > > r;    // pair< Sommet<T> *, Arete<S,T>* >
 	for (int unsigned i = 0; i < lAretes.size(); i++)
 		if (sommet == lAretes.at(i)->debut)
-			r.push_back(new pair< Sommet<T> *, Arete<S, T>* >(lAretes.at(i)->fin, lAretes.at(i)));
+		{
+			pair< Sommet<T> *, Arete<S, T>* > paire(lAretes.at(i)->fin, lAretes.at(i));
+			r.push_back(paire);
+		}
 	return r;
 }
 
@@ -259,36 +262,37 @@ bool Graphe<S, T>::hasCircuit(){
 
 
 template <class S, class T>
-void Graphe<S, T>::Explore(Sommet<T> * i, int & k)
+void Graphe<S, T>::Explore(Sommet<T> * i, int * k)
 {
-	vector<pair< Sommet<T> *, Arete<S, T>* >> successeurs = this->adjacencePlus(i);
+	vector<pair< Sommet<T> *, Arete<S, T>* >> successeurs = this->adjacencesPlus(i);
 	while (i->n > 0)
 	{
-		Sommet<T> * j = successeurs.at(i->n).second;
+		Sommet<T> * j = successeurs.at(i->n).first;
 		i->n = i->n - 1;
 		if (j->num == 0)
 		{
-			k = k + 1;
-			j->num = k;
-			this->Explore1(j);
+			(*k) = (*k) + 1;
+			j->num = (*k);
+			this->Explore(j, k);
 		}
 	}
 }
 
 
 template <class S, class T>
-void Graphe<S, T>::Explore(Sommet<T> * i, int & k, int & l)
+void Graphe<S, T>::Explore(Sommet<T> * i, pair<int, int> * paireKL)
 {
-	vector<pair< Sommet<T> *, Arete<S, T>* >> successeurs = this->adjacencePlus(i);
+	vector<pair< Sommet<T> *, Arete<S, T>* >> successeurs = this->adjacencesPlus(i);
 	while (i->n > 0)
 	{
-		Sommet<T> * j = successeurs.at(i->n).second;
+		Sommet<T> * j = successeurs.at(i->n).first;
 		i->n = i->n - 1;
 		if (j->num == 0)
 		{
-			k = k + 1;
-			j->num = k;
-			this->Explore1(j);
+			++paireKL->first;
+			j->num = paireKL->first;
+			j->ncomp = paireKL->second;
+			this->Explore(j, paireKL);
 		}
 	}
 }
@@ -298,33 +302,34 @@ template <class S, class T>
 void Graphe<S, T>::DFS(Sommet<T> * som)
 {
 	int k = 1;
-	for (int i = 0; i < (int)this->sommets.size(); i++)
+	for (int i = 0; i < (int)this->lSommets.size(); i++)
 	{
-		this->sommets.at(i)->n = this->sommets.at(i)->dPlus;
-		this->sommets.at(i)->num = 0;
+		this->lSommets.at(i)->n = this->lSommets.at(i)->dPlus-1;
+		this->lSommets.at(i)->num = 0;
 	}
 	som->num = k;
-	this->Explore(som, k);
+	this->Explore(som, &k);
 }
 
 
 template <class S, class T>
 void Graphe<S, T>::DFS()
 {
-	int k = 1;
-	int l = 0;
-	for (int i = 0; i < (int)this->sommets.size(); i++)
+	pair<int, int> * paireKL = new pair<int, int>(1, 0);
+	//int * k = new int(1);
+	//int * l = new int(0);
+	for (int i = 0; i < (int)this->lSommets.size(); i++)
 	{
-		this->sommets.at(i)->n = this->sommets.at(i)->dPlus;
-		this->sommets.at(i)->num = 0;
-		this->sommets.at(i)->ncomp = 0;
+		this->lSommets.at(i)->n = this->lSommets.at(i)->dPlus-1;
+		this->lSommets.at(i)->num = 0;
+		this->lSommets.at(i)->ncomp = 0;
 	}
-	for (int i = 0; i < (int)this->sommets.size(); i++)
-		if (this->sommets.at(i)->ncomp == 0)
+	for (int i = 0; i < (int)this->lSommets.size(); i++)
+		if (this->lSommets.at(i)->ncomp == 0)
 		{
-			this->sommets.at(i)->num = k;
-			l++;
-			this->sommets.at(i)->ncomp = l;
-			this->Explore(this->sommets.at(i), k, l);
+			this->lSommets.at(i)->num = paireKL->first;
+			++paireKL->second;
+			this->lSommets.at(i)->ncomp = paireKL->second;
+			this->Explore(this->lSommets.at(i), paireKL);
 		}		
 }
