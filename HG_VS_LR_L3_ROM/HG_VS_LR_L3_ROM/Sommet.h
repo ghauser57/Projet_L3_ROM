@@ -7,15 +7,15 @@ template <class T>
 class Sommet
 {
 public:
-	int degre;
+	int dPlus, dMoins;
 	string nom;
 	T bornInf, bornSup;
-	int nbPredec;
+	int n, num, ncomp;
 	bool marquage;
 	
-	Sommet(const string & nom, const T & bornInf, const T & bornSup) :degre(0), nom(nom), bornInf(bornInf), bornSup(bornSup), nbPredec(0), marquage(false){}
-	Sommet(const string & nom) :degre(0), nom(nom), bornInf(0), bornSup(0), nbPredec(0), marquage(false){}
-	Sommet(const Sommet<T> & s) :degre(s.degre), nom(s.nom), bornInf(s.bornInf), bornSup(s.bornSup), nbPredec(s.nbPredec), marquage(false){}
+	Sommet(const string & nom, const T & bornInf, const T & bornSup) :dPlus(0), dMoins(0), nom(nom), bornInf(bornInf), bornSup(bornSup), n(0), num(0), ncomp(0), marquage(false){}
+	Sommet(const string & nom) :dPlus(0), dMoins(0), bornInf(0), bornSup(0), n(0), num(0), ncomp(0), marquage(false){}
+	Sommet(const Sommet<T> & s) :dPlus(0), dMoins(0), nom(s.nom), bornInf(s.bornInf), bornSup(s.bornSup), n(s.n), num(s.num), ncomp(s.ncomp), marquage(s.marquage){}
 	bool operator == (const Sommet<T> & s) const;
 	bool operator != (const Sommet<T> & s) const;
 	operator string () const;
@@ -25,7 +25,7 @@ template <class T>
 Sommet<T>::operator string () const
 {
 	ostringstream oss;
-	oss << "Sommet(" << "degre = " << degre << " nom = " << nom << " bornInf " << bornInf << " bornSup " << bornSup << ")";
+	oss << "Sommet(" << "degre = " << (dPlus + dMoins) << " nom = " << nom << " bornInf " << bornInf << " bornSup " << bornSup << ")";
 	return oss.str();
 }
 
@@ -38,7 +38,7 @@ ostream & operator << (ostream & os, const Sommet<T> & sommet)
 template <class T>
 bool Sommet<T>::operator == (const Sommet<T> & s) const
 {
-	return (this->degre == s.degre && this->nom == s.nom && this->bornInf == s.bornInf && this->bornSup == s.bornSup && this->nbPredec == s.nbPredec);
+	return (this->nom == s.nom && this->bornInf == s.bornInf && this->bornSup == s.bornSup);
 }
 
 template <class T>
