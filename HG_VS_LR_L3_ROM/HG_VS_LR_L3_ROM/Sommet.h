@@ -1,7 +1,6 @@
 #pragma once
 /**
 Sommet d'un graphe en général
-v est l'information associée au sommet : elle dépend de l'application du graphe
 */
 template <class T>
 class Sommet
