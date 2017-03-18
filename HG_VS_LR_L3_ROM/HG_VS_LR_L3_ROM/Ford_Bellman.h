@@ -11,10 +11,23 @@ void Graphe<S, T>::Ford_Bellman(){
 		lSommets.at(i)->pairPA.first = exp(99);
 	}
 
-	while (k < (lSommets.size() - 1) && !fin){
+
+	for (int unsigned k = 0; k < lSommets.size(); i++){
+
+		while (k < (lSommets.size() - 1) && !fin){
+
+			k++;
+			fin = true;
+			lSommets.at(k)->pairPA.first = 0;
+			lSommets.at(k)->pairPA.second = k;
+
+			for (int unsigned j = 1; j = lSommets.size(); j++){
+				
+			}
+
+		}
 
 	}
-
 	/*
 
 	for (int unsigned k = 0; k < lSommets.size(); i++){
@@ -29,4 +42,6 @@ void Graphe<S, T>::Ford_Bellman(){
 			}
 		}
 	}
+
+	*/
 }

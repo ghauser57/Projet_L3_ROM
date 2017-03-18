@@ -10,7 +10,7 @@ void Graphe<S, T>::Ford(){
 	}
 
 
-	for (int unsigned k = 0; k < lSommets.size(); i++){
+	for (int unsigned k = 0; k < lSommets.size(); k++){
 
 		vector< pair< Sommet<T> *, Arete<S, T>* > > adjP = adjacencesPlus(lSommets.at(k));
 		for (int unsigned j = 0; j < adjP.size(); j++){
