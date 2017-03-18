@@ -88,12 +88,12 @@ Graphe<int,int> gprToGraphe(const string & fileName)
 
 		}
 
-		// Affichage objet Sommet<>
+		// AFFICHAGE SOMMETS==========
 		for (vector<Sommet<int>*>::iterator it = g->lSommets.begin(); it != g->lSommets.end(); ++it){
 			cout << **it << endl;
 		}
 		
-		cout << "==================" << endl;
+		cout << endl << "==================" << endl;
 		cout << " SOURCES" << endl;
 		cout << "==================" << endl;
 		getline(fichier, line);
@@ -111,11 +111,11 @@ Graphe<int,int> gprToGraphe(const string & fileName)
 				pch = strtok(NULL, " ");
 			}
 		
-			/* affichage sources
+			// AFFICHAGE SOURCES==========
 			for (vector<char *>::iterator iter = sources.begin(); iter != sources.end(); iter++)
 				cout << *iter << " ";
 			cout << endl;
-			*/
+			
 			getline(fichier, line);
 		}
 
@@ -136,11 +136,12 @@ Graphe<int,int> gprToGraphe(const string & fileName)
 				puits.push_back(trimChar(pch));
 				pch = strtok(NULL, " ");
 			}
-			/* affichage puits
+
+			// AFFICHAGE PUITS==========
 			for (vector<char *>::iterator iter = puits.begin(); iter != puits.end(); iter++)
 				cout << *iter << " ";
 			cout << endl;
-			*/
+			
 			getline(fichier, line);
 
 		}
@@ -162,43 +163,34 @@ Graphe<int,int> gprToGraphe(const string & fileName)
 				arcs.push_back(trimChar(pch));
 				pch = strtok(NULL, " ");
 			}
-
-			/* affichage arcs
-			for (vector<char *>::iterator iter = arcs.begin(); iter != arcs.end(); iter++)
-				cout << *iter << " ";
-			cout << endl;
-			*/
-
+			
 			int sizeArc = arcs.size();
 
-			
 			Sommet<int> * s1;
 			Sommet<int> * s2;
 
 			if (sizeArc != 0){
 				for (vector<Sommet<int>*>::iterator it = g->lSommets.begin(); it != g->lSommets.end(); ++it){
-					//cout << **it << endl;
 					s1 = g->getSommetByName(string(arcs[1]));
 					s2 = g->getSommetByName(string(arcs[2]));
 				}
 				g->creeArete(s1, s2, atoi(arcs[3]), atoi(arcs[4]));
 			}
-			
-			
 
 			getline(fichier, line);
 
 		}
 
+		// AFFICHAGE ARCS==========
 		for (vector<Arete<int,int>*>::iterator it = g->lAretes.begin(); it != g->lAretes.end(); ++it){
 			cout << **it << endl;
 		}
 
-		cout << "==================" << endl;
+		cout << endl << "==================" << endl;
 		cout << " GRAPHE" << endl;
 		cout << "==================" << endl;
 
-		// parcours des secgions sommets et stockage des valeurs de chaque puits
+		// parcours des sections sommets et stockage des valeurs de chaque puits
 		while (getline(fichier, line)){
 
 			strcpy(msg, line.c_str());
@@ -210,20 +202,14 @@ Graphe<int,int> gprToGraphe(const string & fileName)
 				arcs.push_back(trimChar(pch));
 				pch = strtok(NULL, " ");
 			}
-
-			for (vector<char *>::iterator iter = arcs.begin(); iter != arcs.end(); iter++)
-				cout << *iter << " ";
-			cout << endl;
 		}
-
-		
 	}
 	else
 	{
 		cout << "ERREUR: Impossible d'ouvrir le fichier en lecture." << endl;
 	}
 	
-	cout << endl << endl << endl << endl << endl;
+	// AFFICHAGE GRAPHE==========
 	cout << *g << endl;
 	
 	return *g;

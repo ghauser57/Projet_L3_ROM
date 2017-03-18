@@ -80,24 +80,13 @@ public:
 * */
 template <class S, class T>
 Sommet<T>* Graphe<S, T>::getSommetByName(string s){
-	bool trouve = false;
-	Sommet<int> * som = new Sommet<int>("a");
+
 	for (vector<Sommet<int>*>::iterator it = lSommets.begin(); it != lSommets.end(); ++it){
 		if ((*it)->nom == s){
-			//cout << " it->nom "<< (*it)->nom << "s " << s << endl;
-			trouve = true;
-			som = new Sommet<int>(**it);
-
+			return *it;
 		}
 	}
-		
-	if (trouve){
-		return som;
-	}
-	else{
-		return NULL;
-	}
-	
+	return NULL;
 }
 
 template <class S, class T>
