@@ -10,7 +10,7 @@ template <class S, class T>
 class Graphe
 {
 public:
-
+	
 	vector<Sommet<T> *> lSommets; 
 	vector<Arete<S, T> *> lAretes; 
 	
@@ -39,7 +39,7 @@ public:
 
 	bool hasCircuit();
 
-	//Parcours DFS du graphe
+	/* Parcours DFS du graphe */
 	void Explore(Sommet<T> * i, int & k);
 	void Explore(Sommet<T> * i, int & k, int & l);
 	void DFS(Sommet<T> * som);
