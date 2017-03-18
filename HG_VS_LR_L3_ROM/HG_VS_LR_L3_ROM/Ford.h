@@ -15,9 +15,9 @@ void Graphe<S, T>::Ford(){
 		vector< pair< Sommet<T> *, Arete<S, T>* > > adjP = adjacencesPlus(lSommets.at(k));
 		for (int unsigned j = 0; j < adjP.size(); j++){
 
-			if (adjP.at(j).first->poids > (adjP.at(j).first->poids + adjP.at(j).second->cout)){
+			if (adjP.at(j).first->pairPA->first >(adjP.at(j).first->pairPA->first + adjP.at(j).second->cout)){
 
-				adjP.at(j).first->poids = adjP.at(j).first->poids + adjP.at(j).second->cout;
+				adjP.at(j).first->pairPA->first = adjP.at(j).first->pairPA->first + adjP.at(j).second->cout;
 				adjP.at(j).first->pere = i;
 			}
 		}
