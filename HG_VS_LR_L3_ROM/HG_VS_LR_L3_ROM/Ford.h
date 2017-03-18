@@ -10,9 +10,9 @@ void Graphe<S, T>::Ford(){
 	}
 
 
-	for (int unsigned i = 0; i < lSommets.size(); i++){
+	for (int unsigned k = 0; k < lSommets.size(); i++){
 
-		vector< pair< Sommet<T> *, Arete<S, T>* > > adjP = adjacencesPlus(lSommets.at(i));
+		vector< pair< Sommet<T> *, Arete<S, T>* > > adjP = adjacencesPlus(lSommets.at(k));
 		for (int unsigned j = 0; j < adjP.size(); j++){
 
 			if (adjP.at(j).first->poids > (adjP.at(j).first->poids + adjP.at(j).second->cout)){
