@@ -23,9 +23,22 @@ void Graphe<S, T>::Ford_Bellman(){
 
 			for (int unsigned j = 1; j = lSommets.size(); j++){
 				
+				vector< pair< Sommet<T> *, Arete<S, T>* > > adj = adjacences(lSommets.at(j));
+				int min = exp(99);
+
+				for (int unsigned j = 0; j = adj.size(); j++){
+					if (min > (adj.at(j).first->pairPA.first + adj.at(j).second->cout))
+						min = (adj.at(j).first->pairPA.first + adj.at(j).second->cout);
+				}
+
+				//if (lSommets.at(k)->pairPA.first = 0)
+				// fin = false;
 			}
 
 		}
+
+		if (!fin)
+			//Il y a un circuit de valeur negatif
 
 	}
 	/*
