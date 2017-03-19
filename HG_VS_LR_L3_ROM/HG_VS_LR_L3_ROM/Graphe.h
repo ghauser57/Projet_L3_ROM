@@ -371,45 +371,44 @@ void Graphe<S, T>::dfs()
 
 template <class S, class T>
 void Graphe<S, T>::dijkstra(){
-
-	Graphe<S, T> g = gprToGraphe("gpr_files/data_VRPTW_10.gpr");
+	
 	int pere;
 
-	g.source->marquage = true;
+	this->source->marquage = true;
 	bool tousMarque = true;
 
-	for (vector<Sommet<T>*>::iterator it = g.lSommets.begin(); it != g.lSommets.end(); ++it){
+	for (vector<Sommet<T>*>::iterator it = this->lSommets.begin(); it != this->lSommets.end(); ++it){
 		if ((*it)->marquage){
 			tousMarque = false;
 		}
 	}
 
-	int nbsommets = g.nombreSommets();
+	int nbsommets = this->nombreSommets();
 	int k = 0;
 	bool fin = false;
 
-	g.lSommets.at(k)->poids = 0;
+	this->lSommets.at(k)->poids = 0;
 
 	for (int i = 1; i < nbsommets; i++){
-		g.lSommets.at(i)->poids = exp(99);
+		this->lSommets.at(i)->poids = 9999999;
 	}
 
 	while (!tousMarque && !fin){
 
-		vector< pair<Sommet<T>*, Arete<S, T>*>> * pairFils = new vector< pair<Sommet<T>*, Arete<S, T>*>>((g.adjacencesPlus(g.lSommets.at(k))));
+		vector< pair<Sommet<T>*, Arete<S, T>*>> * pairFils = new vector< pair<Sommet<T>*, Arete<S, T>*>>((this->adjacencesPlus(this->lSommets.at(k))));
 
 		for (vector< pair<Sommet<T>*, Arete<S, T>*>>::iterator it = pairFils->begin(); it != pairFils->end(); ++it){
 			if (!(it->first->marquage)){
-				if ((g.lSommets.at(k)->poids + it->second->cout) < it->first->poids){
-					it->first->poids = g.lSommets.at(k)->poids + it->second->cout;
+				if ((this->lSommets.at(k)->poids + it->second->cout) < it->first->poids){
+					it->first->poids = this->lSommets.at(k)->poids + it->second->cout;
 					pere = k;
 				}
 			}
 		}
 
-		int poidMin = exp(99);
+		int poidMin = 9999999;
 		int pos = 0;
-		for (vector<Sommet<T>*>::iterator it = g.lSommets.begin(); it != g.lSommets.end(); ++it){
+		for (vector<Sommet<T>*>::iterator it = this->lSommets.begin(); it != this->lSommets.end(); ++it){
 			if (!((*it)->marquage)){
 				if ((*it)->poids < poidMin){
 					poidMin = (*it)->poids;
@@ -419,11 +418,11 @@ void Graphe<S, T>::dijkstra(){
 			pos += 1;
 		}
 
-		if (g.lSommets.at(k)->poids = exp(99)){
+		if (this->lSommets.at(k)->poids = 9999999){
 			fin = true;
 		}
 		else{
-			g.lSommets.at(k)->marquage = true;
+			this->lSommets.at(k)->marquage = true;
 		}
 	}
 }
