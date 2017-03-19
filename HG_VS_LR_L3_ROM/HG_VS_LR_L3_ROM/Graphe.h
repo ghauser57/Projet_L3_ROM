@@ -226,7 +226,7 @@ vector< pair< Sommet<T> *, Arete<S, T>* > >  Graphe<S, T>::adjacencesPlus(const 
 template <class S, class T>
 vector< pair< Sommet<T> *, Arete<S, T>* > >  Graphe<S, T>::adjacencesMoins(const Sommet<T> * sommet) const
 {
-	vector< pair< Sommet<T> *, Arete<S, T>* > > r();    // pair< Sommet<T> *, Arete<S,T>* >
+	vector< pair< Sommet<T> *, Arete<S, T>* > > r;    // pair< Sommet<T> *, Arete<S,T>* >
 	for (int unsigned i = 0; i < lAretes.size(); i++)
 		if (sommet == lAretes.at(i)->fin)
 		{
@@ -300,7 +300,7 @@ void Graphe<S, T>::explore1(Sommet<T> * i, vector<int> * K)
 		{
 			++K->at(0);
 			j->num = K->at(0);
-			this->Explore1(j, K);
+			this->explore1(j, K);
 		}
 	}
 }
@@ -320,7 +320,7 @@ void Graphe<S, T>::explore2(Sommet<T> * i, vector<int> * KLF)
 			j->num = KLF->at(0);
 			j->prefixe = KLF->at(0);
 			j->ncomp = KLF->at(1);
-			this->Explore2(j, KLF);
+			this->explore2(j, KLF);
 		}
 	}
 	i->suffixe = KLF->at(2);
@@ -339,7 +339,7 @@ void Graphe<S, T>::dfs(Sommet<T> * som)
 		this->lSommets.at(i)->num = 0;
 	}
 	som->num = K->at(0);
-	this->Explore1(som, K);
+	this->explore1(som, K);
 }
 
 
@@ -364,7 +364,7 @@ void Graphe<S, T>::dfs()
 			this->lSommets.at(i)->prefixe = KLF->at(0);
 			++KLF->at(1);
 			this->lSommets.at(i)->ncomp = KLF->at(1);
-			this->Explore2(this->lSommets.at(i), KLF);
+			this->explore2(this->lSommets.at(i), KLF);
 		}		
 }
 
@@ -433,12 +433,12 @@ template <class S, class T>
 void Graphe<S, T>::bellman()
 {
 	lSommets.at(0)->poids = 0;
-	for (int j = 1; j < lSommets.size(); j++)
+	for (int unsigned j = 1; j < lSommets.size(); j++)
 		lSommets.at(j)->poids = exp(99);
-	for (int j = 1; j < lSommets.size(); j++)
+	for (int unsigned j = 1; j < lSommets.size(); j++)
 	{
 		vector< pair< Sommet<T> *, Arete<S, T>* > > predecesseurs = this->adjacencesMoins(lSommets.at(j));
-		for (int i = 0; i < predecesseurs.size(); i++)
+		for (int unsigned i = 0; i < predecesseurs.size(); i++)
 			if (predecesseurs.at(i).first->poids + predecesseurs.at(i).second->cout < lSommets.at(j)->poids)
 			{
 				lSommets.at(j)->poids = predecesseurs.at(i).first->poids + predecesseurs.at(i).second->cout;
