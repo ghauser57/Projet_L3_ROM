@@ -29,7 +29,7 @@ public:
 
 	static void efface(Pile<T>* & l);
 
-	static T * depiler();
+	T * depiler(Pile<T> * pile);
 };
 
 template <class T>
@@ -47,12 +47,24 @@ bool Pile<T>::isIn(const T* elem)
 }
 
 template <class T>
-T * Pile<T>::depiler()
+T * Pile<T>::depiler(Pile<T> * pile)
 {
-	T * val = this->v;
-	this->v = this->s->v;
-	this->s = this->s->s;
-	return val;
+	if (this != NULL)
+	{
+		T * val = this->v;
+		if (this->s != NULL)
+		{
+			this->v = this->s->v;
+			this->s = this->s->s;
+			//return val;
+		}
+		else
+		{
+			this->v = NULL;
+		}
+		return val;
+	}
+	return NULL;
 }
 
 template <class T>
