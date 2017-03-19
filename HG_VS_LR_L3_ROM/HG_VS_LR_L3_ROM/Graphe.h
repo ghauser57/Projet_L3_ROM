@@ -10,7 +10,7 @@ template <class S, class T>
 class Graphe
 {
 public:
-	// coucou bis
+
 	vector<Sommet<T> *> lSommets; 
 	vector<Arete<S, T> *> lAretes; 
 
