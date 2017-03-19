@@ -371,22 +371,18 @@ void Graphe<S, T>::dfs()
 
 template <class S, class T>
 void Graphe<S, T>::dijkstra(){
-	
-	int pere;
-
-	this->source->marquage = true;
-	bool tousMarque = true;
-
-	for (vector<Sommet<T>*>::iterator it = this->lSommets.begin(); it != this->lSommets.end(); ++it){
-		if ((*it)->marquage){
-			tousMarque = false;
-		}
-	}
+		
+	bool tousMarque = false;
 
 	int nbsommets = this->nombreSommets();
 	int k = 0;
 	bool fin = false;
 
+	for (int i = 0; i < nbsommets; i++){
+		this->lSommets.at(k)->marquage = false;
+	}
+
+	this->lSommets.at(k)->marquage = true;
 	this->lSommets.at(k)->poids = 0;
 
 	for (int i = 1; i < nbsommets; i++){
@@ -401,28 +397,37 @@ void Graphe<S, T>::dijkstra(){
 			if (!(it->first->marquage)){
 				if ((this->lSommets.at(k)->poids + it->second->cout) < it->first->poids){
 					it->first->poids = this->lSommets.at(k)->poids + it->second->cout;
-					pere = k;
+					it->first->pere = k;
 				}
 			}
 		}
 
 		int poidMin = 9999999;
 		int pos = 0;
-		for (vector<Sommet<T>*>::iterator it = this->lSommets.begin(); it != this->lSommets.end(); ++it){
-			if (!((*it)->marquage)){
-				if ((*it)->poids < poidMin){
-					poidMin = (*it)->poids;
-					k = pos;
+		for (int i = 0; i < nbsommets; i++){
+			if (!(lSommets.at(i)->marquage)){
+				if ((lSommets.at(i)->poids) < poidMin){
+					poidMin = lSommets.at(i)->poids;
+					k = i;
 				}
 			}
-			pos += 1;
 		}
 
-		if (this->lSommets.at(k)->poids = 9999999){
+		if (this->lSommets.at(k)->poids == 9999999){
+			cout << "poid = 9999999" << endl;
 			fin = true;
 		}
 		else{
 			this->lSommets.at(k)->marquage = true;
+
+			bool testMarquage = true;
+
+			for (vector<Sommet<T>*>::iterator it = this->lSommets.begin(); it != this->lSommets.end(); ++it){
+				if (!(*it)->marquage){
+					testMarquage = false;
+				}
+			}
+			tousMarque = testMarquage;
 		}
 	}
 }
@@ -433,7 +438,7 @@ void Graphe<S, T>::bellman()
 {
 	lSommets.at(0)->poids = 0;
 	for (int unsigned j = 1; j < lSommets.size(); j++)
-		lSommets.at(j)->poids = exp(99);
+		lSommets.at(j)->poids = 9999999;
 	for (int unsigned j = 1; j < lSommets.size(); j++)
 	{
 		vector< pair< Sommet<T> *, Arete<S, T>* > > predecesseurs = this->adjacencesMoins(lSommets.at(j));
