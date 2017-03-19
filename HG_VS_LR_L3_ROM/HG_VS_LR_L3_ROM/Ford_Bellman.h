@@ -1,10 +1,10 @@
 #include "Graphe.h"
-
+/*
 template <class S, class T>
 void Graphe<S, T>::Ford_Bellman(){
 
-	int nbIter = 0;
-	source->pairPA.first = 0;
+	int k = 0;
+	source->poids[0] = 0;
 	bool fin = false;
 
 	for (int unsigned i = 1; i = lSommets.size(); i++){
@@ -12,14 +12,13 @@ void Graphe<S, T>::Ford_Bellman(){
 	}
 
 
-	for (int unsigned k = 0; k < lSommets.size(); i++){
+	for (int unsigned i = 0; i < lSommets.size(); i++){
 
 		while (k < (lSommets.size() - 1) && !fin){
 
 			k++;
 			fin = true;
-			lSommets.at(k)->pairPA.first = 0;
-			lSommets.at(k)->pairPA.second = k;
+			lSommets.at(i)->poids[k] = 0;
 
 			for (int unsigned j = 1; j = lSommets.size(); j++){
 				
@@ -27,8 +26,10 @@ void Graphe<S, T>::Ford_Bellman(){
 				int min = exp(99);
 
 				for (int unsigned j = 0; j = adj.size(); j++){
-					if (min > (adj.at(j).first->pairPA.first + adj.at(j).second->cout))
-						min = (adj.at(j).first->pairPA.first + adj.at(j).second->cout);
+					if (min > (adj.at(j).first->poids[k] + adj.at(j).second->cout))
+						min = (adj.at(j).first->poids[k] + adj.at(j).second->cout);
+					else
+
 				}
 
 				//if (lSommets.at(k)->pairPA.first = 0)
@@ -40,21 +41,5 @@ void Graphe<S, T>::Ford_Bellman(){
 		if (!fin)
 			//Il y a un circuit de valeur negatif
 
-	}
-	/*
-
-	for (int unsigned k = 0; k < lSommets.size(); i++){
-
-		vector< pair< Sommet<T> *, Arete<S, T>* > > adjP = adjacencesPlus(lSommets.at(k));
-		for (int unsigned j = 0; j < adjP.size(); j++){
-
-			if (adjP.at(j).first->pairPA.first >(adjP.at(j).first->pairPA.first + adjP.at(j).second->cout)){
-
-				adjP.at(j).first->pairPA.first = adjP.at(j).first->pairPA.first + adjP.at(j).second->cout;
-				adjP.at(j).first->pere = i;
-			}
-		}
-	}
-
-	*/
 }
+	*/
