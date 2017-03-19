@@ -29,7 +29,7 @@ public:
 
 	static void efface(Pile<T>* & l);
 
-	T * depiler(Pile<T> * pile);
+	T * depiler();
 };
 
 template <class T>
@@ -47,7 +47,7 @@ bool Pile<T>::isIn(const T* elem)
 }
 
 template <class T>
-T * Pile<T>::depiler(Pile<T> * pile)
+T * Pile<T>::depiler()
 {
 	if (this != NULL)
 	{
