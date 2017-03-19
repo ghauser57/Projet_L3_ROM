@@ -5,7 +5,7 @@ void Bellman()
 {
 	lSommets.at(0)->poids = 0;
 	for (int j = 1; j < lSommets.size(); j++)
-		lSommets.at(j)->poids = exp(99);
+		lSommets.at(j)->poids = 9999999;
 	for (int j = 1; j < lSommets.size(); j++)
 	{
 		vector< pair< Sommet<T> *, Arete<S, T>* > > predecesseurs = this->adjacencesMoins(lSommets.at(j));
