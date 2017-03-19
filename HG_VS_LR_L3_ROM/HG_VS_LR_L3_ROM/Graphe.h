@@ -11,15 +11,15 @@ class Graphe
 {
 public:
 
-	vector<Sommet<T> *> lSommets; 
-	vector<Arete<S, T> *> lAretes; 
+	vector<Sommet<T> *> lSommets;
+	vector<Arete<S, T> *> lAretes;
 
 	Sommet<T> * source;
 	Sommet<T> * puit;
-	
+
 	Graphe();
 	Graphe(const Graphe<S, T> & graphe);
-	
+
 	~Graphe();
 
 	const Graphe<S, T> & operator = (const Graphe<S, T> & graphe);
@@ -29,12 +29,13 @@ public:
 	int nombreAretes() const;
 
 	Sommet<T>* getSommetByName(string);
+	int getPositionSommet(Sommet<T> * s);
 
 	Sommet<T> * creeSommet(const string & nom, const T & bornInf, const T & bornSup);
 	Sommet<T> * creeSommet2(const string & nom);
-	
+
 	Arete<S, T> *creeArete(Sommet<T> * debut, Sommet<T> * fin, const S & cout, const S & temps);
-	
+
 	vector< pair< Sommet<T> *, Arete<S, T>* > > adjacences(const Sommet<T> * sommet) const;
 	vector< pair< Sommet<T> *, Arete<S, T>* > > adjacencesPlus(const Sommet<T> * sommet) const;
 	vector< pair< Sommet<T> *, Arete<S, T>* > > adjacencesMoins(const Sommet<T> * sommet) const;
@@ -160,6 +161,16 @@ Sommet<T>* Graphe<S, T>::getSommetByName(string s){
 		}
 	}
 	return NULL;
+}
+
+
+template <class S, class T>
+int Graphe<S, T>::getPositionSommet(Sommet<T> * s)
+{
+	for (int i = 0; i < (int)lSommets.size(); i++)
+		if (lSommets.at(i) == s)
+			return i;
+	return -1;
 }
 
 
@@ -291,8 +302,9 @@ bool Graphe<S, T>::hasCircuit(){
 template <class S, class T>
 void Graphe<S, T>::explore1(Sommet<T> * i, vector<int> * K)
 {
+	int posI = getPositionSommet(i);
 	vector<pair< Sommet<T> *, Arete<S, T>* >> successeurs = this->adjacencesPlus(i);
-	while (i->n > 0)
+	while (i->n >= 0)
 	{
 		Sommet<T> * j = successeurs.at(i->n).first;
 		i->n = i->n - 1;
@@ -300,6 +312,7 @@ void Graphe<S, T>::explore1(Sommet<T> * i, vector<int> * K)
 		{
 			++K->at(0);
 			j->num = K->at(0);
+			j->pere = posI;
 			this->explore1(j, K);
 		}
 	}
@@ -309,8 +322,9 @@ void Graphe<S, T>::explore1(Sommet<T> * i, vector<int> * K)
 template <class S, class T>
 void Graphe<S, T>::explore2(Sommet<T> * i, vector<int> * KLF)
 {
+	int posI = getPositionSommet(i);
 	vector<pair< Sommet<T> *, Arete<S, T>* >> successeurs = this->adjacencesPlus(i);
-	while (i->n > 0)
+	while (i->n >= 0)
 	{
 		Sommet<T> * j = successeurs.at(i->n).first;
 		i->n = i->n - 1;
@@ -320,6 +334,7 @@ void Graphe<S, T>::explore2(Sommet<T> * i, vector<int> * KLF)
 			j->num = KLF->at(0);
 			j->prefixe = KLF->at(0);
 			j->ncomp = KLF->at(1);
+			j->pere = posI;
 			this->explore2(j, KLF);
 		}
 	}
@@ -335,7 +350,7 @@ void Graphe<S, T>::dfs(Sommet<T> * som)
 	K->push_back(1);
 	for (int i = 0; i < (int)this->lSommets.size(); i++)
 	{
-		this->lSommets.at(i)->n = this->lSommets.at(i)->dPlus-1;
+		this->lSommets.at(i)->n = this->lSommets.at(i)->dPlus - 1;
 		this->lSommets.at(i)->num = 0;
 	}
 	som->num = K->at(0);
@@ -353,7 +368,7 @@ void Graphe<S, T>::dfs()
 
 	for (int i = 0; i < (int)this->lSommets.size(); i++)
 	{
-		this->lSommets.at(i)->n = this->lSommets.at(i)->dPlus-1;
+		this->lSommets.at(i)->n = this->lSommets.at(i)->dPlus - 1;
 		this->lSommets.at(i)->num = 0;
 		this->lSommets.at(i)->ncomp = 0;
 	}
@@ -365,65 +380,68 @@ void Graphe<S, T>::dfs()
 			++KLF->at(1);
 			this->lSommets.at(i)->ncomp = KLF->at(1);
 			this->explore2(this->lSommets.at(i), KLF);
-		}		
+		}
 }
 
 
 template <class S, class T>
 void Graphe<S, T>::dijkstra(){
 
-	Graphe<S, T> g = gprToGraphe("gpr_files/data_VRPTW_10.gpr");
-	int pere;
+	bool tousMarque = false;
 
-	g.source->marquage = true;
-	bool tousMarque = true;
-
-	for (vector<Sommet<T>*>::iterator it = g.lSommets.begin(); it != g.lSommets.end(); ++it){
-		if ((*it)->marquage){
-			tousMarque = false;
-		}
-	}
-
-	int nbsommets = g.nombreSommets();
+	int nbsommets = this->nombreSommets();
 	int k = 0;
 	bool fin = false;
 
-	g.lSommets.at(k)->poids = 0;
+	for (int i = 0; i < nbsommets; i++){
+		this->lSommets.at(k)->marquage = false;
+	}
+
+	this->lSommets.at(k)->marquage = true;
+	this->lSommets.at(k)->poids = 0;
 
 	for (int i = 1; i < nbsommets; i++){
-		g.lSommets.at(i)->poids = exp(99);
+		this->lSommets.at(i)->poids = 9999999;
 	}
 
 	while (!tousMarque && !fin){
 
-		vector< pair<Sommet<T>*, Arete<S, T>*>> * pairFils = new vector< pair<Sommet<T>*, Arete<S, T>*>>((g.adjacencesPlus(g.lSommets.at(k))));
+		vector< pair<Sommet<T>*, Arete<S, T>*>> * pairFils = new vector< pair<Sommet<T>*, Arete<S, T>*>>((this->adjacencesPlus(this->lSommets.at(k))));
 
 		for (vector< pair<Sommet<T>*, Arete<S, T>*>>::iterator it = pairFils->begin(); it != pairFils->end(); ++it){
 			if (!(it->first->marquage)){
-				if ((g.lSommets.at(k)->poids + it->second->cout) < it->first->poids){
-					it->first->poids = g.lSommets.at(k)->poids + it->second->cout;
-					pere = k;
+				if ((this->lSommets.at(k)->poids + it->second->cout) < it->first->poids){
+					it->first->poids = this->lSommets.at(k)->poids + it->second->cout;
+					it->first->pere = k;
 				}
 			}
 		}
 
-		int poidMin = exp(99);
+		int poidMin = 9999999;
 		int pos = 0;
-		for (vector<Sommet<T>*>::iterator it = g.lSommets.begin(); it != g.lSommets.end(); ++it){
-			if (!((*it)->marquage)){
-				if ((*it)->poids < poidMin){
-					poidMin = (*it)->poids;
-					k = pos;
+		for (int i = 0; i < nbsommets; i++){
+			if (!(lSommets.at(i)->marquage)){
+				if ((lSommets.at(i)->poids) < poidMin){
+					poidMin = lSommets.at(i)->poids;
+					k = i;
 				}
 			}
-			pos += 1;
 		}
 
-		if (g.lSommets.at(k)->poids = exp(99)){
+		if (this->lSommets.at(k)->poids == 9999999){
 			fin = true;
 		}
 		else{
-			g.lSommets.at(k)->marquage = true;
+			this->lSommets.at(k)->marquage = true;
+
+			bool testMarquage = true;
+
+			for (vector<Sommet<T>*>::iterator it = this->lSommets.begin(); it != this->lSommets.end(); ++it){
+				if (!(*it)->marquage){
+					testMarquage = false;
+				}
+			}
+			tousMarque = testMarquage;
 		}
 	}
 }
@@ -434,7 +452,7 @@ void Graphe<S, T>::bellman()
 {
 	lSommets.at(0)->poids = 0;
 	for (int unsigned j = 1; j < lSommets.size(); j++)
-		lSommets.at(j)->poids = exp(99);
+		lSommets.at(j)->poids = 9999999;
 	for (int unsigned j = 1; j < lSommets.size(); j++)
 	{
 		vector< pair< Sommet<T> *, Arete<S, T>* > > predecesseurs = this->adjacencesMoins(lSommets.at(j));
