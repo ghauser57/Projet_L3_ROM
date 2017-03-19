@@ -30,7 +30,7 @@ template <class T>
 Sommet<T>::operator string () const
 {
 	ostringstream oss;
-	oss << "Sommet(" << "degre = " << (dPlus + dMoins) << " nom = " << nom << " bornInf " << bornInf << " bornSup " << bornSup << " num " << num << " ncom " << ncomp << ")" ;
+	oss << "Sommet(" << "degre = " << (dPlus + dMoins) << " nom = " << nom << " bornInf " << bornInf << " bornSup " << bornSup << " num " << num << " ncom " << ncomp << " poids " << poids << " pere " << pere << ")";
 	return oss.str();
 }
 
