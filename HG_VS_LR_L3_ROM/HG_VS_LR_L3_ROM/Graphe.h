@@ -460,7 +460,7 @@ void Graphe<S, T>::bellman()
 			if (predecesseurs.at(i).first->poids + predecesseurs.at(i).second->cout < lSommets.at(j)->poids)
 			{
 				lSommets.at(j)->poids = predecesseurs.at(i).first->poids + predecesseurs.at(i).second->cout;
-				lSommets.at(j)->pere = predecesseurs.at(i).first->pere;
+				lSommets.at(j)->pere = i;
 			}
 	}
 }
