@@ -1,7 +1,7 @@
 #include "Graphe.h"
 
 template <class S, class T>
-void Graphe<S,T>::Bellman()
+void Bellman()
 {
 	lSommets.at(0)->poids = 0;
 	for (int j = 1; j < lSommets.size(); j++)

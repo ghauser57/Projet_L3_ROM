@@ -1,7 +1,7 @@
 #include "Graphe.h"
 
 template <class S, class T>
-void Graphe<S,T>::inversionArcs(){
+void inversionArcs(){
 
 	for (int unsigned i = 0; i < lAretes.size(); i++)
 	{
@@ -15,9 +15,9 @@ void Graphe<S,T>::inversionArcs(){
 }
 
 template <class S, class T>
-bool Graphe<S, T>::connexite(const Sommet<T> * A, const Sommet<T> * B){
+bool connexite(const Sommet<T> * A, const Sommet<T> * B){
 
-	DFS(A);
+	dfs(A);
 	if ((B->num) > 0)
 		return true;
 	else

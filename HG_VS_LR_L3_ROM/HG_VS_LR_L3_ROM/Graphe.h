@@ -10,7 +10,7 @@ template <class S, class T>
 class Graphe
 {
 public:
-	//coucou
+
 	vector<Sommet<T> *> lSommets; 
 	vector<Arete<S, T> *> lAretes; 
 
@@ -44,10 +44,16 @@ public:
 	bool hasCircuit();
 
 	/* Parcours DFS du graphe */
-	void Explore1(Sommet<T> * i, vector<int> * K);
-	void Explore2(Sommet<T> * i, vector<int> * KLF);
-	void DFS(Sommet<T> * som);
-	void DFS();
+	void explore1(Sommet<T> * i, vector<int> * K);
+	void explore2(Sommet<T> * i, vector<int> * KLF);
+	void dfs(Sommet<T> * som);
+	void dfs();
+
+	void dijkstra();
+	void bellman();
+	void ford();
+	void inversionArcs();
+	bool connexite(const Sommet<T> * A, const Sommet<T> * B);
 };
 
 
@@ -283,7 +289,7 @@ bool Graphe<S, T>::hasCircuit(){
 
 
 template <class S, class T>
-void Graphe<S, T>::Explore1(Sommet<T> * i, vector<int> * K)
+void Graphe<S, T>::explore1(Sommet<T> * i, vector<int> * K)
 {
 	vector<pair< Sommet<T> *, Arete<S, T>* >> successeurs = this->adjacencesPlus(i);
 	while (i->n > 0)
@@ -301,7 +307,7 @@ void Graphe<S, T>::Explore1(Sommet<T> * i, vector<int> * K)
 
 
 template <class S, class T>
-void Graphe<S, T>::Explore2(Sommet<T> * i, vector<int> * KLF)
+void Graphe<S, T>::explore2(Sommet<T> * i, vector<int> * KLF)
 {
 	vector<pair< Sommet<T> *, Arete<S, T>* >> successeurs = this->adjacencesPlus(i);
 	while (i->n > 0)
@@ -323,7 +329,7 @@ void Graphe<S, T>::Explore2(Sommet<T> * i, vector<int> * KLF)
 
 
 template <class S, class T>
-void Graphe<S, T>::DFS(Sommet<T> * som)
+void Graphe<S, T>::dfs(Sommet<T> * som)
 {
 	vector<int> * K = new vector<int>();
 	K->push_back(1);
@@ -338,7 +344,7 @@ void Graphe<S, T>::DFS(Sommet<T> * som)
 
 
 template <class S, class T>
-void Graphe<S, T>::DFS()
+void Graphe<S, T>::dfs()
 {
 	vector<int> * KLF = new vector<int>();
 	KLF->push_back(1);
@@ -360,4 +366,135 @@ void Graphe<S, T>::DFS()
 			this->lSommets.at(i)->ncomp = KLF->at(1);
 			this->Explore2(this->lSommets.at(i), KLF);
 		}		
+}
+
+
+template <class S, class T>
+void Graphe<S, T>::dijkstra(){
+
+	Graphe<S, T> g = gprToGraphe("gpr_files/data_VRPTW_10.gpr");
+	int pere;
+
+	g.source->marquage = true;
+	bool tousMarque = true;
+
+	for (vector<Sommet<T>*>::iterator it = g.lSommets.begin(); it != g.lSommets.end(); ++it){
+		if ((*it)->marquage){
+			tousMarque = false;
+		}
+	}
+
+	int nbsommets = g.nombreSommets();
+	int k = 0;
+	bool fin = false;
+
+	g.lSommets.at(k)->poids = 0;
+
+	for (int i = 1; i < nbsommets; i++){
+		g.lSommets.at(i)->poids = exp(99);
+	}
+
+	while (!tousMarque && !fin){
+
+		vector< pair<Sommet<T>*, Arete<S, T>*>> * pairFils = new vector< pair<Sommet<T>*, Arete<S, T>*>>((g.adjacencesPlus(g.lSommets.at(k))));
+
+		for (vector< pair<Sommet<T>*, Arete<S, T>*>>::iterator it = pairFils->begin(); it != pairFils->end(); ++it){
+			if (!(it->first->marquage)){
+				if ((g.lSommets.at(k)->poids + it->second->cout) < it->first->poids){
+					it->first->poids = g.lSommets.at(k)->poids + it->second->cout;
+					pere = k;
+				}
+			}
+		}
+
+		int poidMin = exp(99);
+		int pos = 0;
+		for (vector<Sommet<T>*>::iterator it = g.lSommets.begin(); it != g.lSommets.end(); ++it){
+			if (!((*it)->marquage)){
+				if ((*it)->poids < poidMin){
+					poidMin = (*it)->poids;
+					k = pos;
+				}
+			}
+			pos += 1;
+		}
+
+		if (g.lSommets.at(k)->poids = exp(99)){
+			fin = true;
+		}
+		else{
+			g.lSommets.at(k)->marquage = true;
+		}
+	}
+}
+
+
+template <class S, class T>
+void Graphe<S, T>::bellman()
+{
+	lSommets.at(0)->poids = 0;
+	for (int j = 1; j < lSommets.size(); j++)
+		lSommets.at(j)->poids = exp(99);
+	for (int j = 1; j < lSommets.size(); j++)
+	{
+		vector< pair< Sommet<T> *, Arete<S, T>* > > predecesseurs = this->adjacencesMoins(lSommets.at(j));
+		for (int i = 0; i < predecesseurs.size(); i++)
+			if (predecesseurs.at(i).first->poids + predecesseurs.at(i).second->cout < lSommets.at(j)->poids)
+			{
+				lSommets.at(j)->poids = predecesseurs.at(i).first->poids + predecesseurs.at(i).second->cout;
+				lSommets.at(j)->pere = predecesseurs.at(i).first->pere;
+			}
+	}
+}
+
+
+template <class S, class T>
+void Graphe<S, T>::ford(){
+
+	source->poids = 0;
+
+	for (int unsigned i = 0; i = lSommets.size(); i++){
+		lSommets.at(i)->poids = exp(99);
+	}
+
+
+	for (int unsigned k = 0; k < lSommets.size(); k++){
+
+		vector< pair< Sommet<T> *, Arete<S, T>* > > adjP = adjacencesPlus(lSommets.at(k));
+		for (int unsigned j = 0; j < adjP.size(); j++){
+
+			if (adjP.at(j).first->poids  >(adjP.at(j).first->poids + adjP.at(j).second->cout)){
+
+				adjP.at(j).first->poids = adjP.at(j).first->poids + adjP.at(j).second->cout;
+				adjP.at(j).first->pere = i;
+			}
+		}
+	}
+}
+
+
+template <class S, class T>
+void Graphe<S, T>::inversionArcs(){
+
+	for (int unsigned i = 0; i < lAretes.size(); i++)
+	{
+
+		Sommet<T> * A = new Sommet(*(lAretes.at(i)->debut));
+		Sommet<T> * B = new Sommet(*(lAretes.at(i)->fin));
+
+		lAretes.at(i)->debut = B;
+		lAretes.at(i)->fin = A;
+	}
+}
+
+
+template <class S, class T>
+bool Graphe<S, T>::connexite(const Sommet<T> * A, const Sommet<T> * B){
+
+	dfs(A);
+	if ((B->num) > 0)
+		return true;
+	else
+		return false;
+
 }

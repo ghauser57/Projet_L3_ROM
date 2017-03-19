@@ -1,7 +1,7 @@
 #include "Graphe.h"
 
 template <class S, class T>
-void Graphe<S, T>::Ford(){
+void Ford(){
 
 	source->poids = 0;
 
