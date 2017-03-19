@@ -481,7 +481,7 @@ void Graphe<S, T>::ford(){
 
 		for (int unsigned j = 0; j < adjP.size(); j++){
 
-			if (poidsJ  >(poidsPere + poidsArc)){
+			if (adjP.at(j).first->poids  >(lSommets.at(k)->poids + adjP.at(j).second->cout)){
 
 				adjP.at(j).first->poids = lSommets.at(k)->poids + adjP.at(j).second->cout;
 				adjP.at(j).first->pere = k;
