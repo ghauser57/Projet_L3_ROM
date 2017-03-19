@@ -371,63 +371,59 @@ void Graphe<S, T>::dfs()
 
 template <class S, class T>
 void Graphe<S, T>::dijkstra(){
-		
-	bool tousMarque = false;
 
-	int nbsommets = this->nombreSommets();
+	Graphe<S, T> g = gprToGraphe("gpr_files/data_VRPTW_10.gpr");
+	int pere;
+
+	g.source->marquage = true;
+	bool tousMarque = true;
+
+	for (vector<Sommet<T>*>::iterator it = g.lSommets.begin(); it != g.lSommets.end(); ++it){
+		if ((*it)->marquage){
+			tousMarque = false;
+		}
+	}
+
+	int nbsommets = g.nombreSommets();
 	int k = 0;
 	bool fin = false;
 
-	for (int i = 0; i < nbsommets; i++){
-		this->lSommets.at(k)->marquage = false;
-	}
-
-	this->lSommets.at(k)->marquage = true;
-	this->lSommets.at(k)->poids = 0;
+	g.lSommets.at(k)->poids = 0;
 
 	for (int i = 1; i < nbsommets; i++){
-		this->lSommets.at(i)->poids = 9999999;
+		g.lSommets.at(i)->poids = exp(99);
 	}
 
 	while (!tousMarque && !fin){
 
-		vector< pair<Sommet<T>*, Arete<S, T>*>> * pairFils = new vector< pair<Sommet<T>*, Arete<S, T>*>>((this->adjacencesPlus(this->lSommets.at(k))));
+		vector< pair<Sommet<T>*, Arete<S, T>*>> * pairFils = new vector< pair<Sommet<T>*, Arete<S, T>*>>((g.adjacencesPlus(g.lSommets.at(k))));
 
 		for (vector< pair<Sommet<T>*, Arete<S, T>*>>::iterator it = pairFils->begin(); it != pairFils->end(); ++it){
 			if (!(it->first->marquage)){
-				if ((this->lSommets.at(k)->poids + it->second->cout) < it->first->poids){
-					it->first->poids = this->lSommets.at(k)->poids + it->second->cout;
-					it->first->pere = k;
+				if ((g.lSommets.at(k)->poids + it->second->cout) < it->first->poids){
+					it->first->poids = g.lSommets.at(k)->poids + it->second->cout;
+					pere = k;
 				}
 			}
 		}
 
-		int poidMin = 9999999;
+		int poidMin = exp(99);
 		int pos = 0;
-		for (int i = 0; i < nbsommets; i++){
-			if (!(lSommets.at(i)->marquage)){
-				if ((lSommets.at(i)->poids) < poidMin){
-					poidMin = lSommets.at(i)->poids;
-					k = i;
+		for (vector<Sommet<T>*>::iterator it = g.lSommets.begin(); it != g.lSommets.end(); ++it){
+			if (!((*it)->marquage)){
+				if ((*it)->poids < poidMin){
+					poidMin = (*it)->poids;
+					k = pos;
 				}
 			}
+			pos += 1;
 		}
 
-		if (this->lSommets.at(k)->poids == 9999999){
-			cout << "poid = 9999999" << endl;
+		if (g.lSommets.at(k)->poids = exp(99)){
 			fin = true;
 		}
 		else{
-			this->lSommets.at(k)->marquage = true;
-
-			bool testMarquage = true;
-
-			for (vector<Sommet<T>*>::iterator it = this->lSommets.begin(); it != this->lSommets.end(); ++it){
-				if (!(*it)->marquage){
-					testMarquage = false;
-				}
-			}
-			tousMarque = testMarquage;
+			g.lSommets.at(k)->marquage = true;
 		}
 	}
 }
@@ -438,7 +434,7 @@ void Graphe<S, T>::bellman()
 {
 	lSommets.at(0)->poids = 0;
 	for (int unsigned j = 1; j < lSommets.size(); j++)
-		lSommets.at(j)->poids = 9999999;
+		lSommets.at(j)->poids = exp(99);
 	for (int unsigned j = 1; j < lSommets.size(); j++)
 	{
 		vector< pair< Sommet<T> *, Arete<S, T>* > > predecesseurs = this->adjacencesMoins(lSommets.at(j));
@@ -457,20 +453,20 @@ void Graphe<S, T>::ford(){
 
 	source->poids = 0;
 
-	for (int unsigned i = 0; i = lSommets.size(); i++){
-		lSommets.at(i)->poids = exp(99);
+	for (int unsigned i = 1; i < lSommets.size(); i++){
+		lSommets.at(i)->poids = 9999999;
 	}
-
 
 	for (int unsigned k = 0; k < lSommets.size(); k++){
 
 		vector< pair< Sommet<T> *, Arete<S, T>* > > adjP = adjacencesPlus(lSommets.at(k));
+
 		for (int unsigned j = 0; j < adjP.size(); j++){
 
-			if (adjP.at(j).first->poids  >(adjP.at(j).first->poids + adjP.at(j).second->cout)){
+			if (poidsJ  >(poidsPere + poidsArc)){
 
-				adjP.at(j).first->poids = adjP.at(j).first->poids + adjP.at(j).second->cout;
-				adjP.at(j).first->pere = i;
+				adjP.at(j).first->poids = lSommets.at(k)->poids + adjP.at(j).second->cout;
+				adjP.at(j).first->pere = k;
 			}
 		}
 	}
