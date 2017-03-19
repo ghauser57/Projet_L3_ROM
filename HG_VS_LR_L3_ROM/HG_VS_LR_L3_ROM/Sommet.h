@@ -13,7 +13,7 @@ public:
 	string nom;
 	T bornInf, bornSup;
 	int pere;
-	pair <int, int> pairPA;
+	vector<int> poids;
 	int n, num, ncomp;
 	int prefixe, suffixe;
 	bool marquage;
